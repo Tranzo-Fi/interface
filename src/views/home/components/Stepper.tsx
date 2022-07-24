@@ -1,6 +1,7 @@
 import { STEPPER } from "../../../app/config/stepper";
 import { Box } from "rebass/styled-components";
 import { Step, Stepper as StepperType } from "../../../types/app.types";
+import React from "react";
 
 type Props = {
   currentStep: Step;
@@ -16,7 +17,7 @@ const Stepper = ({ currentStep, changeStep }: Props) => {
   return (
     <>
       {STEPPER.map((step, index) => (
-        <>
+        <React.Fragment key={index}>
           <Box
             onClick={() => handleStepChange(step)}
             color={"white"}
@@ -54,7 +55,7 @@ const Stepper = ({ currentStep, changeStep }: Props) => {
               bg={currentStep > step.step ? "flash" : "fadedGrey"}
             ></Box>
           )}
-        </>
+        </React.Fragment>
       ))}
     </>
   );

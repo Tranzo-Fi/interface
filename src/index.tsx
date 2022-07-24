@@ -6,6 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { Web3Provider } from "./web3";
 import { User } from "./container/user";
 import { Flow } from "./container/flow";
+import { Global } from "./container/global";
 
 declare global {
   interface Window {
@@ -22,7 +23,7 @@ const Providers = (
       return <Provider {...props}>{providers}</Provider>;
     }, children);
   }
-)(Web3Provider, User.Provider, Flow.Provider);
+)(Web3Provider, User.Provider, Flow.Provider, Global.Provider);
 
 ReactDOM.render(
   <React.StrictMode>

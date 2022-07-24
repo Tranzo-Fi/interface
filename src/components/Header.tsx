@@ -1,10 +1,15 @@
 import { Box, Flex, Image } from "rebass/styled-components";
 import { Logo } from "../app/assets";
-import WalletConnectButton from "./WalletConnectButton";
+import { User } from "../container/user";
+import AccountStatus from "./wallet/AccountStatus";
+import WalletConnectButton from "./wallet/WalletConnectButton";
 
 type Props = {};
 
 const Header = (props: Props) => {
+  const {
+    state: { address },
+  } = User.useContainer();
   return (
     <>
       <Flex mx={30} justifyContent={"space-between"} py={15}>
@@ -19,7 +24,7 @@ const Header = (props: Props) => {
           src={Logo}
         />
         <Box color={"flash"} fontFamily={"primary"}>
-          <WalletConnectButton />
+          {address ? <AccountStatus /> : <WalletConnectButton />}
         </Box>
       </Flex>
       <Box width={"100%"} height={0.25} bg={"dullDark"} />

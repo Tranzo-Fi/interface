@@ -54,7 +54,7 @@ const reducer = (draft: typeof initialState, action: ActionType): any => {
       draft.modal.isOpen = action.payload;
       break;
     case ACTIONS.CHANGE_FLOW:
-      draft.flow.currentStep = action.paylaod;
+      draft.flow.currentStep = action.payload;
       break;
     default:
       return draft;
