@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Flex } from "rebass/styled-components";
-import TokenItem from "./primitives/TokenItem";
+import TokenItem from "./TokenItem";
 type Props = {};
 
 const ApproveTokenItem = (props: Props) => {

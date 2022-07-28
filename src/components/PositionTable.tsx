@@ -1,6 +1,6 @@
 import { Box, Flex, Text } from "rebass/styled-components";
 import Layout from "./primitives/Layout";
-import TokenItem from "./primitives/TokenItem";
+import TokenItem from "./TokenItem";
 
 type Props = {};
 

@@ -6,6 +6,7 @@ import { STORAGE_KEY } from "../../constants/storage";
 import { useWeb3React } from "@web3-react/core";
 import { CHAIN_ID } from "../../connector";
 import { SUPPORTED_WALLETS } from "../../constants/wallet";
+import usePrevious from "../../hooks/usePrevious";
 
 enum ACTIONS {
   LOGIN_REQUEST = "LOGIN_REQUEST",
@@ -28,6 +29,18 @@ const initialState = {
 
 export const User = createContainer(useUser);
 
+function usePostLogout(onLogout: Function) {
+  const { active } = useWeb3React();
+  const previousSession = usePrevious(active);
+
+  React.useEffect(() => {
+    if (previousSession && !active) {
+      // clear up state when user logs out from wallet connect
+      onLogout();
+    }
+  }, [previousSession, active, onLogout]);
+}
+
 function useUser() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const { active, account, activate, deactivate, chainId } = useWeb3React();
@@ -36,9 +49,12 @@ function useUser() {
     CONNECTOR_ID.defaultValue
   );
 
+  usePostLogout(() => {
+    setConnectorId("");
+    dispatch({ type: ACTIONS.LOGOUT });
+  });
+
   React.useEffect(() => {
-    console.log("here>>");
-    console.log(active, account, chainId);
     if (active && account && chainId) {
       console.log("here?");
       dispatch({ type: ACTIONS.LOGIN_SUCCESS, payload: { address: account } });
@@ -84,6 +100,10 @@ function useUser() {
     [dispatch, setConnectorId, activate]
   );
 
+  const logout = React.useCallback(() => {
+    deactivate();
+  }, [deactivate]);
+
   //auto login
   const [isTried, setIsTried] = React.useState(false);
   const [connectorId] = useLocalStorage(
@@ -95,7 +115,6 @@ function useUser() {
       (walletInfo) => walletInfo.id === connectorId
     )?.connector;
     if (!isTried && connector) {
-      console.log("auto login...");
       login(connector, connectorId);
       setIsTried(true);
     }
@@ -105,6 +124,7 @@ function useUser() {
     state,
     actions: {
       login,
+      logout,
     },
   };
 }

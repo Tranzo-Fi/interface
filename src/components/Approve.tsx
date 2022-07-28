@@ -1,4 +1,4 @@
-import { Box, Text, Flex } from "rebass/styled-components";
+import { Box, Flex } from "rebass/styled-components";
 import ApproveTokenItem from "./ApproveTokenItem";
 import Layout from "./primitives/Layout";
 
