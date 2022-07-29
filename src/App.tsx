@@ -14,7 +14,7 @@ function App() {
   // function handleLogin() {
   //   login(injected, 'metamask');
   // }
-
+  console.log("APP.TS");
   return (
     <>
       <ThemeProvider theme={theme}>

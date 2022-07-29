@@ -1,7 +1,4 @@
-import { createContainer } from "unstated-next";
 import { BigNumber, Contract } from "ethers";
-
-export const Transaction = createContainer(useTransaction);
 
 function useTransaction() {
   const execute = (
@@ -23,3 +20,5 @@ function useTransaction() {
     execute,
   };
 }
+
+export default useTransaction;

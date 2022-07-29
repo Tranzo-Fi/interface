@@ -1,3 +1,5 @@
+import { TOKEN_LIST } from "../../constants/tokens";
+import useTokens from "../../hooks/useToken";
 import { Box, Flex } from "rebass/styled-components";
 import { STEPPER } from "../../app/config/stepper";
 import Approve from "../../components/Approve";
@@ -18,7 +20,16 @@ const Home = (props: Props) => {
     actions: { changeStep },
   } = Flow.useContainer();
 
-  console.log(currentStep);
+  const tokenList = TOKEN_LIST.map((item) => {
+    return {
+      symbol: item.symbol,
+      address: item.aTokenAddress,
+      decimal: item.decimals,
+    };
+  });
+  const { balances, allowances } = useTokens(tokenList);
+  console.log("balances", balances);
+  console.log("allowances", allowances);
   return (
     <>
       <Header />

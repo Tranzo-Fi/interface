@@ -58,7 +58,7 @@ function useUser() {
     if (active && account && chainId) {
       console.log("here?");
       dispatch({ type: ACTIONS.LOGIN_SUCCESS, payload: { address: account } });
-      const isWrongNetwork = chainId !== CHAIN_ID.Ethereum;
+      const isWrongNetwork = chainId !== CHAIN_ID.Kovan;
       if (isWrongNetwork) {
         window.alert("Unsupported chain");
         // @ts-ignore

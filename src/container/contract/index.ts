@@ -6,7 +6,7 @@ import {
   ERC20__factory,
   DebtToken__factory,
   Tranzo__factory,
-} from "@tranzo-fi/tranzo-types/src";
+} from "../../types/contract";
 import { constants } from "ethers";
 
 const TRANZO_CONTRACT_ADDRESS = {

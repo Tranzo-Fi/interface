@@ -1,4 +1,5 @@
-export const TOKEN_LIST = [
+import { TokenList } from "./../types/token.types";
+export const TOKEN_LIST: TokenList = [
   {
     symbol: "AAVE",
     tokenAddress: "0xB597cd8D3217ea6477232F9217fa70837ff667Af",
