@@ -1,4 +1,4 @@
-import { TokenList } from "./../types/token.types";
+import { Token, TokenList } from "./../types/token.types";
 export const TOKEN_LIST: TokenList = [
   {
     symbol: "AAVE",
@@ -169,3 +169,27 @@ export const TOKEN_LIST: TokenList = [
     decimals: 9,
   },
 ];
+
+export const aTokenList: Token[] = TOKEN_LIST.map((t) => {
+  return {
+    symbol: t.symbol,
+    address: t.aTokenAddress,
+    decimal: t.decimals,
+  };
+});
+
+export const variableDebtTokenList: Token[] = TOKEN_LIST.map((t) => {
+  return {
+    symbol: t.symbol,
+    address: t.variableDebtTokenAddress,
+    decimal: t.decimals,
+  };
+});
+
+export const stableDebtTokenList: Token[] = TOKEN_LIST.map((t) => {
+  return {
+    symbol: t.symbol,
+    address: t.stableDebtTokenAddress,
+    decimal: t.decimals,
+  };
+});

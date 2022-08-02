@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Box, Text } from "rebass";
+import { Flex, Box, Text, Image } from "rebass";
 
 type Props = {
   token: string;
@@ -9,15 +9,19 @@ type Props = {
 const TokenItem = ({ token, balance }: Props) => {
   return (
     <Flex my={2}>
-      <Box
+      <Image
         width={38}
-        mr={"9px"}
         height={38}
-        bg={"grey"}
         sx={{
+          border: `3px solid`,
+          borderColor: "#514EEC",
           borderRadius: "100%",
+          opacity: 0.9,
         }}
-      ></Box>
+        mr={9}
+        src={`/icons/tokens/${token.toLocaleLowerCase()}.svg`}
+        alt={token}
+      />
       <Box mt={1}>
         <Text fontFamily={"Roboto"} color={"lightGrey"}>
           {token}

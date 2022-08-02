@@ -19,3 +19,10 @@ export function decreaseByPercent(amount: ethers.BigNumber, percent: number) {
   );
   return ethers.BigNumber.from(increasedAmount.toFixed(0));
 }
+
+export function normalizeBignumber(
+  amount: ethers.BigNumber,
+  decimal: number = 18
+) {
+  return ethers.utils.formatUnits(amount, decimal);
+}

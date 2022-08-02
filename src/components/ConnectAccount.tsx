@@ -1,102 +1,102 @@
-import { Box, Text, Image, Flex } from "rebass/styled-components";
-import { Wallet } from "../app/assets";
-import AppButton from "./primitives/Button";
+import { Box, Flex } from "rebass/styled-components";
 import Avatar from "boring-avatars";
-import Layout from "./primitives/Layout";
+import { truncateAddress } from "utils/address";
 
-type Props = {};
+type Props = {
+  from: string;
+  to: string;
+};
 
-const ConnectAccount = (props: Props) => {
+const ConnectAccount = ({ from, to }: Props) => {
+  const AccountAvatar = (accountAddress: string) => {
+    return (
+      <Flex flexDirection={"column"}>
+        <Avatar
+          size={80}
+          name={accountAddress}
+          variant="sunset"
+          colors={["#2623dd", "#6462de", "#939398", "#4a4a5c", "#5757ae"]}
+        />
+        <Box
+          bg={"flash"}
+          width={"fix-content"}
+          textAlign="center"
+          fontSize={12}
+          fontFamily={"Roboto Mono"}
+          color={"white"}
+          p={1}
+          px={1}
+          mt={3}
+          sx={{
+            border: "2px solid #6b68f2",
+            borderRadius: "10px",
+          }}
+        >
+          {truncateAddress(accountAddress)}
+        </Box>
+      </Flex>
+    );
+  };
+
   return (
-    <Layout title={"Connect Account"}>
+    <>
       <Box
-        minHeight={"60vh"}
+        minHeight={"auto"}
+        width={"80%"}
+        margin={"auto"}
         display={"flex"}
         justifyContent={"center"}
         alignItems={"center"}
         flexDirection={"column"}
+        mt={4}
       >
-        <Text
-          fontWeight={"body"}
-          mb={3}
-          color={"fadedFlash"}
-          fontFamily={"Roboto Mono"}
-        >
-          {"Connect to the account you want to move your positions to".toUpperCase()}
-        </Text>
         <Flex>
-          <Flex flexDirection={"column"}>
-            <Avatar
-              size={130}
-              name="dsddfd,nssdd3355vcnjksnk"
-              variant="sunset"
-              colors={["#2623dd", "#6462de", "#939398", "#4a4a5c", "#5757ae"]}
-            />
+          <>
+            {AccountAvatar(from)}
             <Box
-              bg={"flash"}
-              width={"fix-content"}
-              textAlign="center"
-              fontFamily={"Roboto Mono"}
-              color={"white"}
-              p={1}
-              px={10}
-              ml={-10}
-              mt={3}
+              width={40}
+              display={"grid"}
+              alignContent={"center"}
+              justifyContent={"center"}
+              height={40}
+              mt={40}
+              ml={20}
+              mr={30}
               sx={{
-                border: "2px solid #6b68f2",
-                borderRadius: "10px",
-              }}
-            >
-              0x56BF...7GZC
-            </Box>
-          </Flex>
-          <Box
-            width={40}
-            display={"grid"}
-            alignContent={"center"}
-            justifyContent={"center"}
-            height={40}
-            mt={40}
-            ml={20}
-            sx={{
-              borderRadius: "100%",
-            }}
-            bg={"grey"}
-          >
-            <i className="fas fa-arrow-right grey"></i>
-          </Box>
-          <Flex justifyContent={"center"} flexDirection={"column"}>
-            <Box
-              width={200}
-              height={200}
-              sx={{
-                border: `2px dashed #544f8e`,
                 borderRadius: "100%",
               }}
-              display={"grid"}
-              justifyContent={"center"}
-              alignContent={"center"}
-              bg={"#35325a"}
-              ml={20}
+              bg={"grey"}
             >
-              <Image
-                opacity={0.15}
-                mb={2}
-                src={Wallet}
-                width={"80px"}
-                height={"auto"}
-              />
+              <i className="fas fa-arrow-right grey"></i>
             </Box>
-            <AppButton
-              style={{
-                marginRight: "-10px",
-                marginTop: "15px",
-                padding: "15px 0px 15px 0px",
-              }}
-              label={"Connect Account"}
-              onPress={() => {}}
-            />
-          </Flex>
+            {AccountAvatar(to)}
+            {/* <Flex justifyContent={"center"} flexDirection={"column"}>
+              <Box
+                width={140}
+                height={140}
+                sx={{
+                  border: `2px dashed #544f8e`,
+                  borderRadius: "100%",
+                }}
+                display={"grid"}
+                justifyContent={"center"}
+                alignContent={"center"}
+                bg={"#35325a"}
+                ml={20}
+              >
+                <Image opacity={0.15} mb={2} src={Wallet} width={"80px"} height={"auto"} />
+              </Box>
+              <AppButton
+                style={{
+                  marginRight: "-10px",
+                  marginTop: "15px",
+                  padding: "15px 0px 15px 0px",
+                }}
+                label={"Connect Account"}
+                onPress={() => {}}
+              />
+            </Flex> */}
+          </>
         </Flex>
         {/* <Image
           opacity={0.5}
@@ -115,7 +115,7 @@ const ConnectAccount = (props: Props) => {
         </Text>
         <AppButton label="Connect Account" onPress={() => console.log("hey")} /> */}
       </Box>
-    </Layout>
+    </>
   );
 };
 

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 interface ModalProps {
   show: boolean;
-  height?: number;
+  height?: number | string;
   width?: number;
   heading?: string;
   children: JSX.Element;
@@ -22,14 +22,7 @@ const CloseIcon = styled.div`
   }
 `;
 
-const BasicModal = ({
-  heading,
-  show,
-  height = 400,
-  width = 400,
-  children,
-  close,
-}: ModalProps) => {
+const BasicModal = ({ heading, show, height = 400, width = 400, children, close }: ModalProps) => {
   return (
     <>
       {show && (
@@ -62,20 +55,23 @@ const BasicModal = ({
             }}
           >
             {heading && (
-              <Flex justifyContent={"space-between"}>
-                <Text fontSize={20} fontFamily={"Roboto Mono"} color={"grey"}>
-                  Connect Wallet
+              <Box
+                sx={{
+                  borderRadius: "10px",
+                  border: "2px solid",
+                  borderColor: "#59547b",
+                  backgroundColor: "infoFlash",
+                }}
+                display={"flex"}
+                marginX={0.5}
+                marginTop={1}
+                padding={10}
+              >
+                <i className="fa fa-info-circle white" aria-hidden="true"></i>
+                <Text fontSize={12} mt={-0.5} fontFamily={"Roboto Mono"} ml={2} color={"white"}>
+                  {heading}
                 </Text>
-                <Box>
-                  <CloseIcon>
-                    <i
-                      onClick={close}
-                      className="fa fa-times"
-                      aria-hidden="true"
-                    ></i>
-                  </CloseIcon>
-                </Box>
-              </Flex>
+              </Box>
             )}
             {children}
           </Box>

@@ -1,3 +1,4 @@
+import { ToastContainer } from "react-bootstrap";
 import { BrowserRouter, Switch } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 
@@ -7,17 +8,10 @@ import GlobalStyle from "./utils/globalStyle";
 import { theme } from "./utils/theme";
 
 function App() {
-  // const {
-  //   actions: {login}
-  // } = User.useContainer();
-
-  // function handleLogin() {
-  //   login(injected, 'metamask');
-  // }
-  console.log("APP.TS");
   return (
     <>
       <ThemeProvider theme={theme}>
+        <ToastContainer />
         <WalletModal />
         <GlobalStyle />
         <BrowserRouter>

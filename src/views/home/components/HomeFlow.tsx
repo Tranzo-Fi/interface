@@ -16,7 +16,7 @@ const HomeFlow = ({ currentStep }: Props) => {
       case Step.TWO:
         return <Approve />;
       case Step.THREE:
-        return <ConnectAccount />;
+        return <ConnectAccount from={"a"} to={"0"} />;
       case Step.FOUR:
         return <PositionTable />;
       default:

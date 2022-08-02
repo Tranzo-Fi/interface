@@ -43,11 +43,8 @@ function usePostLogout(onLogout: Function) {
 
 function useUser() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  const { active, account, activate, deactivate, chainId } = useWeb3React();
-  const [, setConnectorId] = useLocalStorage(
-    CONNECTOR_ID.name,
-    CONNECTOR_ID.defaultValue
-  );
+  const { active, account, activate, deactivate, chainId, library } = useWeb3React();
+  const [, setConnectorId] = useLocalStorage(CONNECTOR_ID.name, CONNECTOR_ID.defaultValue);
 
   usePostLogout(() => {
     setConnectorId("");
@@ -56,7 +53,6 @@ function useUser() {
 
   React.useEffect(() => {
     if (active && account && chainId) {
-      console.log("here?");
       dispatch({ type: ACTIONS.LOGIN_SUCCESS, payload: { address: account } });
       const isWrongNetwork = chainId !== CHAIN_ID.Kovan;
       if (isWrongNetwork) {
@@ -77,11 +73,7 @@ function useUser() {
   }, [account, active, chainId]);
 
   const login = React.useCallback(
-    (
-      instance: AbstractConnector,
-      connectorId: string,
-      onActivate?: Function
-    ) => {
+    (instance: AbstractConnector, connectorId: string, onActivate?: Function) => {
       dispatch({ type: ACTIONS.LOGIN_REQUEST });
       setConnectorId(connectorId);
       activate(instance, () => {}, true)
@@ -97,7 +89,7 @@ function useUser() {
           console.log(err);
         });
     },
-    [dispatch, setConnectorId, activate]
+    [setConnectorId, activate, library]
   );
 
   const logout = React.useCallback(() => {
@@ -106,14 +98,9 @@ function useUser() {
 
   //auto login
   const [isTried, setIsTried] = React.useState(false);
-  const [connectorId] = useLocalStorage(
-    CONNECTOR_ID.name,
-    CONNECTOR_ID.defaultValue
-  );
+  const [connectorId] = useLocalStorage(CONNECTOR_ID.name, CONNECTOR_ID.defaultValue);
   React.useEffect(() => {
-    const connector = SUPPORTED_WALLETS.find(
-      (walletInfo) => walletInfo.id === connectorId
-    )?.connector;
+    const connector = SUPPORTED_WALLETS.find((walletInfo) => walletInfo.id === connectorId)?.connector;
     if (!isTried && connector) {
       login(connector, connectorId);
       setIsTried(true);

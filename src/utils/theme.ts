@@ -4,6 +4,7 @@ export const theme = {
     fadedDark: "#202033",
     dullDark: "#262638",
     flash: "#514EEC",
+    infoFlash: "#484870",
     fadedFlash: "#6462de",
     grey: "#4a4a5c",
     fadedGrey: "#6b6b85",

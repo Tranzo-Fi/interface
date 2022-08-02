@@ -1,9 +1,28 @@
+import { ethers } from "ethers";
+import { AllownaceTokenType, BalanceTokenType } from "hooks/useTokens";
 import React from "react";
 import { Box, Flex } from "rebass/styled-components";
+import { increaseByPercent, normalizeBignumber } from "utils/format";
 import TokenItem from "./TokenItem";
-type Props = {};
+type Props = {
+  balance: BalanceTokenType;
+  allowance: AllownaceTokenType;
+  onClick: (tokenAddress: string, amount: ethers.BigNumber) => void;
+};
 
-const ApproveTokenItem = (props: Props) => {
+const ApproveTokenItem = ({ balance, allowance, onClick }: Props) => {
+  console.log("Balance", balance?.symbol, balance?.balance.toString());
+  console.log("Allowed", allowance?.symbol, allowance?.allowance.toString());
+  const isDisabled = React.useMemo(() => {
+    return parseFloat(allowance?.allowance.toString()) >= parseFloat(balance?.balance.toString());
+  }, [allowance?.allowance, balance?.balance]);
+  const handleClick = () => {
+    console.log(isDisabled);
+    if (isDisabled) return;
+    const amountWithBuffer = increaseByPercent(balance.balance, 0.001); // 0.001 is buffer - workaround
+    onClick(balance.address, amountWithBuffer);
+  };
+
   return (
     <Box
       sx={{
@@ -12,15 +31,16 @@ const ApproveTokenItem = (props: Props) => {
       }}
       ml={2}
       width={"250px"}
-      height={"100px"}
+      height={"112px"}
       mt={3}
     >
       <Flex flexDirection={"column"} justifyContent={"flex-end"}>
         <Box px={3} py={2}>
-          <TokenItem token={"wBTC"} balance={"1.076"} />
+          <TokenItem token={balance?.symbol} balance={Number(normalizeBignumber(balance.balance, balance.decimal)).toFixed(7)} />
         </Box>
         <Box
-          bg={"flash"}
+          onClick={handleClick}
+          bg={isDisabled ? "dullFlash" : "flash"}
           fontFamily={"Roboto Mono"}
           color={"white"}
           width={"100%"}
@@ -35,11 +55,11 @@ const ApproveTokenItem = (props: Props) => {
             borderTop: `1px solid #262638`,
             "&:hover": {
               cursor: "pointer",
-              backgroundColor: "fadedFlash",
+              backgroundColor: isDisabled ? "" : "fadedFlash",
             },
           }}
         >
-          Approve
+          {isDisabled ? "Approved" : "Approve"}
         </Box>
       </Flex>
     </Box>

@@ -1,16 +1,27 @@
 .white {
-    color: white;
+  color: white;
 }
 
 .flash {
-   color: #514EEC;
-   font-size: 23px;
+  color: #514eec;
+  font-size: 23px;
 }
 
 .flash:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .grey {
-    color: rgb(103, 103, 103);
+  color: rgb(103, 103, 103);
+}
+.fx {
+  font-size: 20px;
+}
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(240, 23%, 16%);
+  }
+  100% {
+    background-color: hsl(240, 24%, 20%);
+  }
 }

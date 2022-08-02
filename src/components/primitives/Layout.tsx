@@ -8,15 +8,7 @@ type Props = {
 const Layout = ({ title, children }: Props) => {
   return (
     <>
-      <Text
-        width={"80%"}
-        fontFamily={"secondary"}
-        margin={"auto"}
-        mt={30}
-        fontSize={3}
-        fontWeight="body"
-        color="fadedFlash"
-      >
+      <Text width={"80%"} fontFamily={"secondary"} margin={"auto"} mt={30} fontSize={3} fontWeight="body" color="fadedFlash">
         {title}
       </Text>
       <Box

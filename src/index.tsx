@@ -9,6 +9,7 @@ import { Flow } from "./container/flow";
 import { Global } from "./container/global";
 import { Connection } from "./container/connection";
 import { Contract } from "./container/contract";
+import { Transaction } from "container/Transaction";
 
 declare global {
   interface Window {
@@ -25,14 +26,7 @@ const Providers = (
       return <Provider {...props}>{providers}</Provider>;
     }, children);
   }
-)(
-  Web3Provider,
-  User.Provider,
-  Flow.Provider,
-  Global.Provider,
-  Connection.Provider,
-  Contract.Provider
-);
+)(Web3Provider, User.Provider, Global.Provider, Connection.Provider, Contract.Provider, Transaction.Provider, Flow.Provider);
 
 ReactDOM.render(
   <React.StrictMode>

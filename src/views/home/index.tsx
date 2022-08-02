@@ -1,5 +1,5 @@
 import { TOKEN_LIST } from "../../constants/tokens";
-import useTokens from "../../hooks/useToken";
+import useTokens from "../../hooks/useTokens";
 import { Box, Flex } from "rebass/styled-components";
 import { STEPPER } from "../../app/config/stepper";
 import Approve from "../../components/Approve";
@@ -11,6 +11,7 @@ import AppButton from "../../components/primitives/Button";
 import { Flow } from "../../container/flow";
 import HomeFlow from "./components/HomeFlow";
 import Stepper from "./components/Stepper";
+import { Global } from "container/global";
 
 type Props = {};
 
@@ -20,16 +21,8 @@ const Home = (props: Props) => {
     actions: { changeStep },
   } = Flow.useContainer();
 
-  const tokenList = TOKEN_LIST.map((item) => {
-    return {
-      symbol: item.symbol,
-      address: item.aTokenAddress,
-      decimal: item.decimals,
-    };
-  });
-  const { balances, allowances } = useTokens(tokenList);
-  console.log("balances", balances);
-  console.log("allowances", allowances);
+  const { state } = Global.useContainer();
+  console.log("state", state);
   return (
     <>
       <Header />
@@ -43,12 +36,7 @@ const Home = (props: Props) => {
             borderRadius: "5px",
           }}
         >
-          <Box
-            display={"grid"}
-            alignContent="center"
-            height={"100%"}
-            px={"100px"}
-          >
+          <Box display={"grid"} alignContent="center" height={"100%"} px={"100px"}>
             <Flex width={"100%"} justifyContent={"space-between"}>
               <Stepper currentStep={currentStep} changeStep={changeStep} />
             </Flex>

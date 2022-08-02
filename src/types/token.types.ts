@@ -1,4 +1,4 @@
-export type TokenType = {
+export type TokenListType = {
   symbol: string;
   tokenAddress: string;
   aTokenAddress: string;
@@ -7,4 +7,15 @@ export type TokenType = {
   decimals: number;
 };
 
-export type TokenList = TokenType[];
+export type TokenList = TokenListType[];
+
+export type Token = {
+  symbol: string;
+  address: string;
+  decimal: number;
+};
+
+export enum TokenType {
+  AToken = "AToken",
+  DebtToken = "DebtToken",
+}

@@ -5,21 +5,30 @@ import { useImmerReducer } from "use-immer";
 
 enum ACTIONS {
   TOGGLE_WALLET_MODAL = "TOGGLE_WALLET_MODAL",
-  CHANGE_FLOW = "CHANGE_FLOW",
+  SET_TO_SIGNER = "SET_TO_SIGNER",
+  SET_FROM_SIGNER = "SET_FROM_SIGNER",
 }
 
 const initialState = {
   modal: {
     isOpen: false,
   },
-  flow: {
-    currentStep: Step.ONE,
+  signer: {
+    from: {
+      address: "",
+      signer: null,
+    },
+    to: {
+      address: "",
+      signer: null,
+    },
   },
 };
 
 type ActionType =
   | { type: ACTIONS.TOGGLE_WALLET_MODAL; payload: boolean }
-  | { type: ACTIONS.CHANGE_FLOW; payload: Step };
+  | { type: ACTIONS.SET_TO_SIGNER; payload: { signer: any; address: string } }
+  | { type: ACTIONS.SET_FROM_SIGNER; payload: { signer: any; address: string } };
 
 export const Global = createContainer(useGlobal);
 
@@ -32,9 +41,17 @@ function useGlobal() {
     },
     [dispatch]
   );
-  const changeFlow = React.useCallback(
-    (payload: Step) => {
-      dispatch({ type: ACTIONS.CHANGE_FLOW, payload });
+
+  const setToSigner = React.useCallback(
+    (payload: { signer: any; address: string }) => {
+      dispatch({ type: ACTIONS.SET_TO_SIGNER, payload });
+    },
+    [dispatch]
+  );
+
+  const setFromSigner = React.useCallback(
+    (payload: { signer: any; address: string }) => {
+      dispatch({ type: ACTIONS.SET_FROM_SIGNER, payload });
     },
     [dispatch]
   );
@@ -43,7 +60,8 @@ function useGlobal() {
     state,
     actions: {
       toggleWalletModal,
-      changeFlow,
+      setToSigner,
+      setFromSigner,
     },
   };
 }
@@ -53,8 +71,13 @@ const reducer = (draft: typeof initialState, action: ActionType): any => {
     case ACTIONS.TOGGLE_WALLET_MODAL:
       draft.modal.isOpen = action.payload;
       break;
-    case ACTIONS.CHANGE_FLOW:
-      draft.flow.currentStep = action.payload;
+    case ACTIONS.SET_TO_SIGNER:
+      draft.signer.to.address = action.payload.address;
+      draft.signer.to.signer = action.payload.signer;
+      break;
+    case ACTIONS.SET_FROM_SIGNER:
+      draft.signer.from.address = action.payload.address;
+      draft.signer.from.signer = action.payload.signer;
       break;
     default:
       return draft;

@@ -5,8 +5,8 @@ import { Box, Flex, Text } from "rebass/styled-components";
 import { User } from "../../container/user";
 import useOutsideAlerter from "../../hooks/useClickOutsideAlert";
 import { truncateAddress } from "../../utils/address";
-import MenuItem from "../Menu/MenuItem";
-import MenuOverlay from "../Menu/MenuOverlay";
+import MenuItem from "../menu/MenuItem";
+import MenuOverlay from "../menu/MenuOverlay";
 import ButtonArrow from "../primitives/ButtonArrow";
 
 type Props = {};
@@ -47,12 +47,7 @@ const AccountStatus = (props: Props) => {
             },
           }}
         >
-          <Avatar
-            size={25}
-            name={address}
-            variant="sunset"
-            colors={["#2623dd", "#6462de", "#939398", "#4a4a5c", "#5757ae"]}
-          />
+          <Avatar size={25} name={address} variant="sunset" colors={["#2623dd", "#6462de", "#939398", "#4a4a5c", "#5757ae"]} />
           <Text alignSelf={"center"} ml={2}>
             {truncateAddress(address)}
           </Text>

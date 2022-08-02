@@ -14,9 +14,9 @@ type Props = {
 };
 
 const WalletButton = ({ name, description, icon, connector, id }: Props) => {
-  const {
-    actions: { toggleWalletModal },
-  } = Global.useContainer();
+  // const {
+  //   actions: { toggleWalletModal },
+  // } = Global.useContainer();
   const {
     actions: { login },
   } = User.useContainer();
@@ -28,8 +28,8 @@ const WalletButton = ({ name, description, icon, connector, id }: Props) => {
     if (!isActiveConnector) {
       login(connector, id);
     }
-    toggleWalletModal(false);
-  }, [connector, login, toggleWalletModal, id, isActiveConnector]);
+    // toggleWalletModal(false);
+  }, [isActiveConnector, login, connector, id]);
 
   return (
     <Flex
