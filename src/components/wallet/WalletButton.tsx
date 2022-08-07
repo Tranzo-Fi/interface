@@ -2,7 +2,6 @@ import React from "react";
 import { Flex, Image, Box, Text } from "rebass/styled-components";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useWeb3React } from "@web3-react/core";
-import { Global } from "../../container/global";
 import { User } from "../../container/user";
 
 type Props = {

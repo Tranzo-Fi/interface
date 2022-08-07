@@ -5,7 +5,6 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { STORAGE_KEY } from "../../constants/storage";
 import { useWeb3React } from "@web3-react/core";
 import { CHAIN_ID } from "../../connector";
-import { SUPPORTED_WALLETS } from "../../constants/wallet";
 import usePrevious from "../../hooks/usePrevious";
 import { Flow } from "container/flow";
 import { Step } from "types/app.types";

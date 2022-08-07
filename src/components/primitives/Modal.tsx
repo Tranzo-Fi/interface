@@ -1,5 +1,4 @@
 import { Box, Text } from "rebass/styled-components";
-import styled from "styled-components";
 
 interface ModalProps {
   show: boolean;
@@ -10,17 +9,17 @@ interface ModalProps {
   close: () => void;
 }
 
-const CloseIcon = styled.div`
-  > i {
-    color: #4a4a5c;
-    font-size: 25px;
-    transition: 0.5s;
-    :hover {
-      cursor: pointer;
-      color: #57576c;
-    }
-  }
-`;
+// const CloseIcon = styled.div`
+//   > i {
+//     color: #4a4a5c;
+//     font-size: 25px;
+//     transition: 0.5s;
+//     :hover {
+//       cursor: pointer;
+//       color: #57576c;
+//     }
+//   }
+// `;
 
 const BasicModal = ({ heading, show, height = 400, width = 400, children, close }: ModalProps) => {
   return (

@@ -1,4 +1,5 @@
 import Avatar from "boring-avatars";
+import { Global } from "container/global";
 import React from "react";
 import { Box, Flex, Text } from "rebass/styled-components";
 
@@ -15,9 +16,14 @@ const AccountStatus = (props: Props) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const menuRef = React.useRef(null);
   const {
-    state: { address },
     actions: { logout },
   } = User.useContainer();
+
+  const {
+    state: {
+      signer: { to: toAccount, from: fromAccount },
+    },
+  } = Global.useContainer();
 
   const onToggleMenu = () => {
     setIsMenuOpen((open) => !open);
@@ -47,10 +53,40 @@ const AccountStatus = (props: Props) => {
             },
           }}
         >
-          <Avatar size={25} name={address} variant="sunset" colors={["#2623dd", "#6462de", "#939398", "#4a4a5c", "#5757ae"]} />
+          <Avatar
+            size={25}
+            name={fromAccount.address}
+            variant="sunset"
+            colors={["#2623dd", "#6462de", "#939398", "#4a4a5c", "#5757ae"]}
+          />
           <Text alignSelf={"center"} ml={2}>
-            {truncateAddress(address)}
+            {truncateAddress(fromAccount.address)}
           </Text>
+          <Box
+            width={20}
+            mx={2}
+            mt={0.5}
+            display={"grid"}
+            alignContent={"center"}
+            justifyContent={"center"}
+            height={20}
+            sx={{
+              borderRadius: "100%",
+            }}
+            bg={"grey"}
+          >
+            <i className="fas fa-arrow-right grey small"></i>
+          </Box>
+          <Avatar
+            size={25}
+            name={toAccount.address}
+            variant="sunset"
+            colors={["#2623dd", "#6462de", "#939398", "#4a4a5c", "#5757ae"]}
+          />
+          <Text alignSelf={"center"} ml={2}>
+            {truncateAddress(toAccount.address)}
+          </Text>
+
           <Box alignSelf={"center"} ml={2}>
             <ButtonArrow isOpen={isMenuOpen} />
           </Box>

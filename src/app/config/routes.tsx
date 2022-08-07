@@ -1,12 +1,10 @@
-import React from 'react'
-
-import { AppRoute } from '../../types/app.types';
-import Home from '../../views/home';
+import { AppRoute } from "../../types/app.types";
+import Home from "../../views/home";
 
 export const ROUTES: AppRoute[] = [
-    {
-        name: 'Home',
-        route: '/',
-        component: Home,
-    },
+  {
+    name: "Home",
+    route: "/",
+    component: Home,
+  },
 ];

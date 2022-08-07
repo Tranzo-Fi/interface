@@ -1,13 +1,28 @@
+import { ethers } from "ethers";
 import { BalanceTokenType } from "hooks/useTokens";
+import React from "react";
 import { Box, Flex } from "rebass/styled-components";
-import { normalizeBignumber } from "utils/format";
+import { increaseByPercent, normalizeBignumber } from "utils/format";
 import TokenItem from "./TokenItem";
 
+export interface TokenWithAllowanceAndBalanceType extends BalanceTokenType {
+  allowance: number;
+  type: "stable" | "variable";
+}
+
 type Props = {
-  token: BalanceTokenType;
+  token: TokenWithAllowanceAndBalanceType;
+  onClick: (tokenAddress: string, amount: ethers.BigNumber) => void;
 };
 
-const DelegateTokenItem = ({ token }: Props) => {
+const DelegateTokenItem = ({ token, onClick }: Props) => {
+  const isDisabled = React.useMemo(() => {
+    return parseFloat(token?.allowance?.toString()) >= parseFloat(token?.balance?.toString());
+  }, [token?.allowance, token?.balance]);
+  const handleClick = () => {
+    const amountWithBuffer = increaseByPercent(token.balance, 0.01); // buffer 1%
+    onClick(token.address, amountWithBuffer);
+  };
   return (
     <Box
       sx={{
@@ -24,8 +39,8 @@ const DelegateTokenItem = ({ token }: Props) => {
           <TokenItem token={token?.symbol} balance={Number(normalizeBignumber(token?.balance, token.decimal)).toFixed(7)} />
         </Box>
         <Box
-          onClick={() => {}}
-          bg={"flash"}
+          onClick={handleClick}
+          bg={isDisabled ? "dullFlash" : "flash"}
           fontFamily={"Roboto Mono"}
           color={"white"}
           width={"100%"}
@@ -40,11 +55,11 @@ const DelegateTokenItem = ({ token }: Props) => {
             borderTop: `1px solid #262638`,
             "&:hover": {
               cursor: "pointer",
-              backgroundColor: "fadedFlash",
+              backgroundColor: isDisabled ? "" : "fadedFlash",
             },
           }}
         >
-          Delegate
+          {isDisabled ? "Delegated" : "Delegate"}
         </Box>
       </Flex>
     </Box>

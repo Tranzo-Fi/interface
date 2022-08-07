@@ -1,25 +1,40 @@
-import { TOKEN_LIST } from "../../constants/tokens";
-import useTokens from "../../hooks/useTokens";
+import React from "react";
 import { Box, Flex } from "rebass/styled-components";
-import { STEPPER } from "../../app/config/stepper";
-import Approve from "../../components/Approve";
-import ConnectAccount from "../../components/ConnectAccount";
 
 import Header from "../../components/Header";
-import PositionTable from "../../components/PositionTable";
 import AppButton from "../../components/primitives/Button";
 import { Flow } from "../../container/flow";
 import HomeFlow from "./components/HomeFlow";
 import Stepper from "./components/Stepper";
+import useTranzo from "hooks/useTranzo";
+import { Step } from "types/app.types";
+import { Global } from "container/global";
 
 type Props = {};
 
 const Home = (props: Props) => {
   const {
+    actions: { tranzoTransfer },
+  } = useTranzo();
+  const {
     currentStep,
-    actions: { changeStep },
+    actions: { changeStep, buttonFlow },
   } = Flow.useContainer();
 
+  const {
+    state: {
+      signer: { to: toAccount },
+    },
+  } = Global.useContainer();
+
+  const handlePress = React.useCallback(() => {
+    if (currentStep === Step.FOUR) {
+      tranzoTransfer(toAccount.address);
+      return;
+    }
+
+    buttonFlow(currentStep).action();
+  }, [buttonFlow, currentStep, toAccount.address, tranzoTransfer]);
   return (
     <>
       <Header />
@@ -47,10 +62,8 @@ const Home = (props: Props) => {
             height: "70px",
           }}
           rightIcon={<i className="fas fa-arrow-right white"></i>}
-          label="Transfer Positions"
-          onPress={() => {
-            changeStep(currentStep + 1);
-          }}
+          label={currentStep === Step.FOUR ? "Transfer Positions" : buttonFlow(currentStep).buttonLabel}
+          onPress={handlePress}
         />
       </Flex>
     </>

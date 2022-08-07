@@ -1,7 +1,7 @@
 import { CHAIN_ID } from "connector";
 import { aTokenList } from "constants/tokens";
 import { Connection } from "container/connection";
-import { Contract, TRANZO_CONTRACT_ADDRESS } from "container/contract";
+import { TRANZO_CONTRACT_ADDRESS } from "container/contract";
 import { Global } from "container/global";
 import { ethers } from "ethers";
 import useApproveProgress from "hooks/useApproveProgress";

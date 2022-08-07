@@ -1,4 +1,4 @@
-import { Box, Flex, Image } from "rebass/styled-components";
+import { Box, Text, Flex, Image } from "rebass/styled-components";
 import { Logo } from "../app/assets";
 import { User } from "../container/user";
 import AccountStatus from "./wallet/AccountStatus";
@@ -13,16 +13,29 @@ const Header = (props: Props) => {
   return (
     <>
       <Flex mx={30} justifyContent={"space-between"} py={15}>
-        <Image
-          sx={{
-            "&:hover": {
-              cursor: "pointer",
-            },
-          }}
-          height={50}
-          width={50}
-          src={Logo}
-        />
+        <Flex>
+          <Image
+            sx={{
+              "&:hover": {
+                cursor: "pointer",
+              },
+            }}
+            height={50}
+            width={50}
+            src={Logo}
+          />
+          <Text
+            fontSize={22}
+            fontWeight={"bold"}
+            ml={2}
+            display={"grid"}
+            alignContent={"center"}
+            fontFamily={"Roboto Mono"}
+            color={"flash"}
+          >
+            Tranzo.
+          </Text>
+        </Flex>
         <Box color={"flash"} fontFamily={"primary"}>
           {address ? <AccountStatus /> : <WalletConnectButton />}
         </Box>

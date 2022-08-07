@@ -1,6 +1,5 @@
 import React from "react";
 import { createContainer } from "unstated-next";
-import { Step } from "../../types/app.types";
 import { useImmerReducer } from "use-immer";
 
 enum ACTIONS {

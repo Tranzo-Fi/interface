@@ -3,15 +3,17 @@ import useTokens from "hooks/useTokens";
 import { Box, Flex, Text } from "rebass/styled-components";
 import Layout from "./primitives/Layout";
 import TokenItem from "./TokenItem";
-import { normalizeBignumber } from "utils/format";
+import { increaseByPercent, normalizeBignumber } from "utils/format";
 import React from "react";
 import { TokenType } from "types/token.types";
 import { Connection } from "container/connection";
 import WalletConnectButton from "./wallet/WalletConnectButton";
 
-type Props = {};
+type Props = {
+  isReview: boolean;
+};
 
-const PositionTable = (props: Props) => {
+const PositionTable = ({ isReview = false }: Props) => {
   const { account } = Connection.useContainer();
   const { balances: aTokenBalances } = useTokens(aTokenList, TokenType.AToken);
   const { balances: stableDebtTokenBalances } = useTokens(stableDebtTokenList, TokenType.DebtToken);
@@ -41,11 +43,14 @@ const PositionTable = (props: Props) => {
             <TokenItem
               key={token.address}
               token={token.symbol}
-              balance={normalizeBignumber(token.balance, token.decimal).slice(0, 9)}
+              balance={normalizeBignumber(isReview ? increaseByPercent(token.balance, 0.09) : token.balance, token.decimal).slice(
+                0,
+                9
+              )}
             />
           )
       );
-  }, [stableDebtTokenBalances]);
+  }, [isReview, stableDebtTokenBalances]);
 
   const varableDebtTokenListBalance = React.useMemo(() => {
     return variableDebtTokenBalances
@@ -56,15 +61,18 @@ const PositionTable = (props: Props) => {
             <TokenItem
               key={token.address}
               token={token.symbol}
-              balance={normalizeBignumber(token.balance, token.decimal).slice(0, 9)}
+              balance={normalizeBignumber(isReview ? increaseByPercent(token.balance, 0.09) : token.balance, token.decimal).slice(
+                0,
+                9
+              )}
             />
           )
       );
-  }, [variableDebtTokenBalances]);
+  }, [isReview, variableDebtTokenBalances]);
 
   return (
     <>
-      <Layout title={"Your Positions"}>
+      <Layout title={isReview ? "Review Position Transfer" : "Your Positions"}>
         {!account ? (
           <Flex flexDirection={"column"} justifyContent={"center"} alignItems={"center"} height={520}>
             <Box

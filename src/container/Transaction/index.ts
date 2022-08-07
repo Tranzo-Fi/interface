@@ -96,7 +96,7 @@ function useTransaction() {
   const execute = React.useCallback(
     async (txAction: Promise<ContractTransaction | string>) => {
       let receipt: TransactionReceipt | null = null;
-      const { tx, isRejected, txHash } = await userConfirmTx(txAction);
+      const { tx, isRejected } = await userConfirmTx(txAction);
       if (isRejected) {
         return;
       }
@@ -116,6 +116,7 @@ function useTransaction() {
 
   const executeWithGasLimit = React.useCallback(
     async (contract: ethers.Contract, funcName: string, args: any[]) => {
+      console.log(address);
       const overrides = { from: address };
       const gasLimitRatio = BigNumber.from(2);
       let gasLimit: BigNumber;
@@ -125,13 +126,13 @@ function useTransaction() {
         gasLimit = await contract.estimateGas[funcName](...args, overrides);
         receipt = await execute(contract[funcName](...args, { ...overrides, gasLimit: gasLimitRatio.mul(gasLimit) }));
       } catch (err) {
-        console.log("executeWithGasLimit - error", error);
+        console.log("executeWithGasLimit - error", err);
         setError(err);
       }
 
       return receipt;
     },
-    [address, error, execute]
+    [address, execute]
   );
   return {
     error,

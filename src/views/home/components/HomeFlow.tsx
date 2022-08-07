@@ -12,13 +12,13 @@ const HomeFlow = ({ currentStep }: Props) => {
   function renderFlowComponent() {
     switch (currentStep) {
       case Step.ONE:
-        return <PositionTable />;
+        return <PositionTable isReview={false} />;
       case Step.TWO:
         return <Approve />;
       case Step.THREE:
         return <Delegate />;
       case Step.FOUR:
-        return <PositionTable />;
+        return <PositionTable isReview={true} />;
       default:
         return <></>;
     }

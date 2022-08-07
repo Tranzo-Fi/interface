@@ -1,32 +1,51 @@
+import { CHAIN_ID } from "connector";
 import { stableDebtTokenList, variableDebtTokenList } from "constants/tokens";
-import useTokens, { BalanceTokenType } from "hooks/useTokens";
+import { TRANZO_CONTRACT_ADDRESS } from "container/contract";
+import { Global } from "container/global";
+import { ethers } from "ethers";
+import useApproveDelegationProgress from "hooks/useApproveDelegationProgress";
+import useDelegation from "hooks/useDelegation";
+import useToken from "hooks/useToken";
+import useTokens from "hooks/useTokens";
 import React from "react";
 import { Box, Flex } from "rebass";
 import { TokenType } from "types/token.types";
-import DelegateTokenItem from "./DelegateTokenItem";
+import DelegateTokenItem, { TokenWithAllowanceAndBalanceType } from "./DelegateTokenItem";
 import Layout from "./primitives/Layout";
 import Progress from "./primitives/Progress";
 
 type Props = {};
 
 const Delegate = (props: Props) => {
-  const { balances: stableDebtTokenBalances } = useTokens(stableDebtTokenList, TokenType.DebtToken);
-  const { balances: variableDebtTokenBalances } = useTokens(variableDebtTokenList, TokenType.DebtToken);
-
-  const stableDelegateTokens = React.useMemo(
-    () => stableDebtTokenBalances.filter((t) => t?.balance?.toString() !== "0"),
-    [stableDebtTokenBalances]
+  const { balances: stableDebtTokenBalances, allowances: stableDebtTokenAllowances } = useTokens(
+    stableDebtTokenList,
+    TokenType.DebtToken
   );
-  const variableDelegateTokens = React.useMemo(
-    () => variableDebtTokenBalances.filter((t) => t?.balance?.toString() !== "0"),
-    [variableDebtTokenBalances]
+  const { balances: variableDebtTokenBalances, allowances: variableDebtTokenAllownaces } = useTokens(
+    variableDebtTokenList,
+    TokenType.DebtToken
   );
 
-  const delegateTokens = React.useMemo(
-    () => ([] as any).concat(stableDelegateTokens, variableDelegateTokens),
-    [stableDelegateTokens, variableDelegateTokens]
+  const { delegateTokens } = useDelegation(
+    stableDebtTokenBalances,
+    stableDebtTokenAllowances,
+    variableDebtTokenBalances,
+    variableDebtTokenAllownaces
   );
 
+  const {
+    state: {
+      signer: { to: toAccountSigner },
+    },
+  } = Global.useContainer();
+  const progress = useApproveDelegationProgress(delegateTokens);
+  const { approveDelegation } = useToken(TokenType.DebtToken, toAccountSigner?.signer || undefined);
+  const doDelegateApprove = React.useCallback(
+    (tokenAddress: string, amount: ethers.BigNumber) => {
+      approveDelegation(tokenAddress, TRANZO_CONTRACT_ADDRESS[CHAIN_ID.Kovan], amount);
+    },
+    [approveDelegation]
+  );
   return (
     <Layout title={"Aprove Delegation"}>
       <Box px={3}>
@@ -38,7 +57,7 @@ const Delegate = (props: Props) => {
           }}
         >
           <Box width={"97%"}>
-            <Progress progress={0.4} />
+            <Progress progress={progress} />
           </Box>
           <Box width={"2%"}>
             <i className="fa fa-info-circle flash" aria-hidden="true"></i>
@@ -46,8 +65,8 @@ const Delegate = (props: Props) => {
         </Flex>
         <Box minHeight={"55vh"}>
           <Flex flexWrap={"wrap"}>
-            {delegateTokens.map((t: BalanceTokenType, index: number) => {
-              return <DelegateTokenItem key={t?.address} token={t} />;
+            {(delegateTokens || []).map((t: TokenWithAllowanceAndBalanceType) => {
+              return <DelegateTokenItem key={t?.address} onClick={doDelegateApprove} token={t} />;
             })}
           </Flex>
         </Box>
