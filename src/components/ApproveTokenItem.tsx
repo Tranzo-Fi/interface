@@ -11,14 +11,13 @@ type Props = {
 };
 
 const ApproveTokenItem = ({ balance, allowance, onClick }: Props) => {
-  console.log("Balance", balance?.symbol, balance?.balance.toString());
-  console.log("Allowed", allowance?.symbol, allowance?.allowance.toString());
+  // console.log("Balance", balance?.symbol, balance?.balance.toString());
+  // console.log("Allowed", allowance?.symbol, allowance?.allowance.toString());
   const isDisabled = React.useMemo(() => {
     return parseFloat(allowance?.allowance.toString()) >= parseFloat(balance?.balance.toString());
   }, [allowance?.allowance, balance?.balance]);
   const handleClick = () => {
-    console.log(isDisabled);
-    if (isDisabled) return;
+    // if (isDisabled) return;
     const amountWithBuffer = increaseByPercent(balance.balance, 0.001); // 0.001 is buffer - workaround
     onClick(balance.address, amountWithBuffer);
   };

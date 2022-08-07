@@ -26,7 +26,18 @@ const WalletButton = ({ name, description, icon, connector, id }: Props) => {
 
   const handleOnClick = React.useCallback(() => {
     if (!isActiveConnector) {
-      login(connector, id);
+      if (id === "metamask" && window.ethereum) {
+        window?.ethereum // for account selection
+          ?.request({
+            method: "wallet_requestPermissions",
+            params: [{ eth_accounts: {} }],
+          })
+          .then(() => {
+            login(connector, id);
+          });
+      } else {
+        login(connector, id);
+      }
     }
     // toggleWalletModal(false);
   }, [isActiveConnector, login, connector, id]);

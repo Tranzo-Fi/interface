@@ -19,6 +19,7 @@ const ConnectAccount = ({ from, to }: Props) => {
         />
         <Box
           bg={"flash"}
+          ml={-2}
           width={"fix-content"}
           textAlign="center"
           fontSize={12}

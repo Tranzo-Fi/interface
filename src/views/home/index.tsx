@@ -11,7 +11,6 @@ import AppButton from "../../components/primitives/Button";
 import { Flow } from "../../container/flow";
 import HomeFlow from "./components/HomeFlow";
 import Stepper from "./components/Stepper";
-import { Global } from "container/global";
 
 type Props = {};
 
@@ -21,8 +20,6 @@ const Home = (props: Props) => {
     actions: { changeStep },
   } = Flow.useContainer();
 
-  const { state } = Global.useContainer();
-  console.log("state", state);
   return (
     <>
       <Header />

@@ -1,6 +1,6 @@
+import Delegate from "components/Delegate";
 import React from "react";
 import Approve from "../../../components/Approve";
-import ConnectAccount from "../../../components/ConnectAccount";
 import PositionTable from "../../../components/PositionTable";
 import { Step } from "../../../types/app.types";
 
@@ -16,7 +16,7 @@ const HomeFlow = ({ currentStep }: Props) => {
       case Step.TWO:
         return <Approve />;
       case Step.THREE:
-        return <ConnectAccount from={"a"} to={"0"} />;
+        return <Delegate />;
       case Step.FOUR:
         return <PositionTable />;
       default:

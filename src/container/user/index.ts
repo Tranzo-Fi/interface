@@ -7,6 +7,9 @@ import { useWeb3React } from "@web3-react/core";
 import { CHAIN_ID } from "../../connector";
 import { SUPPORTED_WALLETS } from "../../constants/wallet";
 import usePrevious from "../../hooks/usePrevious";
+import { Flow } from "container/flow";
+import { Step } from "types/app.types";
+import { Global } from "container/global";
 
 enum ACTIONS {
   LOGIN_REQUEST = "LOGIN_REQUEST",
@@ -43,8 +46,15 @@ function usePostLogout(onLogout: Function) {
 
 function useUser() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  const { active, account, activate, deactivate, chainId, library } = useWeb3React();
+  const { active, account, activate, deactivate, chainId } = useWeb3React();
   const [, setConnectorId] = useLocalStorage(CONNECTOR_ID.name, CONNECTOR_ID.defaultValue);
+  const {
+    actions: { changeStep },
+  } = Flow.useContainer();
+
+  const {
+    actions: { clearSigners },
+  } = Global.useContainer();
 
   usePostLogout(() => {
     setConnectorId("");
@@ -89,29 +99,36 @@ function useUser() {
           console.log(err);
         });
     },
-    [setConnectorId, activate, library]
+    [setConnectorId, activate]
   );
 
   const logout = React.useCallback(() => {
     deactivate();
+    changeStep(Step.ONE);
+    clearSigners();
+  }, [changeStep, clearSigners, deactivate]);
+
+  const deactivateWallet = React.useCallback(() => {
+    deactivate();
   }, [deactivate]);
 
   //auto login
-  const [isTried, setIsTried] = React.useState(false);
-  const [connectorId] = useLocalStorage(CONNECTOR_ID.name, CONNECTOR_ID.defaultValue);
-  React.useEffect(() => {
-    const connector = SUPPORTED_WALLETS.find((walletInfo) => walletInfo.id === connectorId)?.connector;
-    if (!isTried && connector) {
-      login(connector, connectorId);
-      setIsTried(true);
-    }
-  }, [connectorId, isTried, login]);
+  // const [isTried, setIsTried] = React.useState(false);
+  // const [connectorId] = useLocalStorage(CONNECTOR_ID.name, CONNECTOR_ID.defaultValue);
+  // React.useEffect(() => {
+  //   const connector = SUPPORTED_WALLETS.find((walletInfo) => walletInfo.id === connectorId)?.connector;
+  //   if (!isTried && connector) {
+  //     login(connector, connectorId);
+  //     setIsTried(true);
+  //   }
+  // }, [connectorId, isTried, login]);
 
   return {
     state,
     actions: {
       login,
       logout,
+      deactivateWallet,
     },
   };
 }

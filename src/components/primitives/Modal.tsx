@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "rebass/styled-components";
+import { Box, Text } from "rebass/styled-components";
 import styled from "styled-components";
 
 interface ModalProps {

@@ -1,15 +1,15 @@
 import { Contract } from "ethers";
 import React from "react";
-import { Token } from "types/token.types";
 
 type Callback = (...args: any[]) => void;
 
-const useContractEvent = (contract: Contract, tokenList: Token[], eventName: string, callback: Callback) => {
+const useContractEvent = (contract: Contract, address: string, eventName: string, callback: Callback) => {
   const savedCallback = React.useRef<Callback | null>();
+  const _contract = contract?.attach(address);
 
   React.useEffect(() => {
     savedCallback.current = callback;
-  }, [callback]);
+  });
 
   React.useEffect(() => {
     function listener(...args: any[]) {
@@ -17,20 +17,14 @@ const useContractEvent = (contract: Contract, tokenList: Token[], eventName: str
         savedCallback.current(...args);
       }
     }
-    if (contract && eventName) {
-      for (const token of tokenList) {
-        contract.attach(token.address);
-        contract.on(eventName, listener);
-      }
+    if (_contract && eventName) {
+      _contract.on(eventName, listener);
 
       return () => {
-        for (const token of tokenList) {
-          contract.attach(token.address);
-          contract.off(eventName, listener);
-        }
+        _contract.off(eventName, listener);
       };
     }
-  }, [contract, eventName, tokenList]);
+  }, [_contract, contract, eventName]);
 };
 
 export default useContractEvent;

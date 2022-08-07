@@ -1,7 +1,8 @@
 import { CHAIN_ID } from "connector";
 import { aTokenList } from "constants/tokens";
 import { Connection } from "container/connection";
-import { TRANZO_CONTRACT_ADDRESS } from "container/contract";
+import { Contract, TRANZO_CONTRACT_ADDRESS } from "container/contract";
+import { Global } from "container/global";
 import { ethers } from "ethers";
 import useApproveProgress from "hooks/useApproveProgress";
 import useToken from "hooks/useToken";
@@ -30,9 +31,15 @@ const Progress = ({ progress }: { progress: number }) => {
 
 const Approve = (props: Props) => {
   const { account } = Connection.useContainer();
+  const {
+    state: {
+      signer: { from: fromSigner },
+    },
+  } = Global.useContainer();
+
   const { balances: aTokenBalances, allowances: aTokenAllowances } = useTokens(aTokenList, TokenType.AToken);
   const progress = useApproveProgress(aTokenAllowances, aTokenBalances);
-  const { approve } = useToken(TokenType.AToken);
+  const { approve } = useToken(TokenType.AToken, fromSigner?.signer || undefined); // fromSigner is signer of wallet from where positions to be moved from
 
   const doApprove = React.useCallback(
     (tokenAddress: string, amount: ethers.BigNumber) => {
@@ -40,8 +47,6 @@ const Approve = (props: Props) => {
     },
     [approve]
   );
-
-  console.log("aTokenAllowances", aTokenAllowances);
 
   const approveTokens = React.useMemo(() => {
     return (

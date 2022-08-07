@@ -26,7 +26,7 @@ const Providers = (
       return <Provider {...props}>{providers}</Provider>;
     }, children);
   }
-)(Web3Provider, User.Provider, Global.Provider, Connection.Provider, Contract.Provider, Transaction.Provider, Flow.Provider);
+)(Web3Provider, Global.Provider, Connection.Provider, Contract.Provider, Flow.Provider, User.Provider, Transaction.Provider);
 
 ReactDOM.render(
   <React.StrictMode>
