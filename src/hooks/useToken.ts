@@ -19,7 +19,6 @@ function useToken(tokenType: TokenType, overrideSigner?: ethers.Signer) {
   const { erc20: ERC20Contract, debtToken } = Contract.useContainer();
   const erc20 = tokenType === TokenType.AToken ? ERC20Contract.eth : debtToken;
   const _signer = overrideSigner ? overrideSigner : signer;
-
   /**
    * Approves a spender to spend
    * @param tokenAddress

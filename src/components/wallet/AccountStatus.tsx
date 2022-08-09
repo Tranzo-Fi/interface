@@ -6,8 +6,8 @@ import { Box, Flex, Text } from "rebass/styled-components";
 import { User } from "../../container/user";
 import useOutsideAlerter from "../../hooks/useClickOutsideAlert";
 import { truncateAddress } from "../../utils/address";
-import MenuItem from "../menu/MenuItem";
-import MenuOverlay from "../menu/MenuOverlay";
+import MenuItem from "../../components/Menu/MenuItem";
+import MenuOverlay from "../../components/Menu/MenuOverlay";
 import ButtonArrow from "../primitives/ButtonArrow";
 
 type Props = {};

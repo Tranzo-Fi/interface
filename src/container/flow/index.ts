@@ -7,19 +7,26 @@ import React from "react";
 import { createContainer } from "unstated-next";
 import { Step } from "../../types/app.types";
 import useDelegation from "hooks/useDelegation";
+import { usePolling } from "hooks/usePolling";
 
 export const Flow = createContainer(useFlow);
 
 function useFlow() {
-  const { balances: aTokenBalances, allowances: aTokenAllowances } = useTokens(aTokenList, TokenType.AToken);
-  const { balances: stableDebtTokenBalances, allowances: stableDebtTokenAllowances } = useTokens(
-    stableDebtTokenList,
-    TokenType.DebtToken
-  );
-  const { balances: variableDebtTokenBalances, allowances: variableDebtTokenAllownaces } = useTokens(
-    variableDebtTokenList,
-    TokenType.DebtToken
-  );
+  const {
+    balances: aTokenBalances,
+    allowances: aTokenAllowances,
+    actions: { fetchAllowance },
+  } = useTokens(aTokenList, TokenType.AToken);
+  const {
+    balances: stableDebtTokenBalances,
+    allowances: stableDebtTokenAllowances,
+    actions: { fetchAllowance: fetchStableDebtTokenAllowance },
+  } = useTokens(stableDebtTokenList, TokenType.DebtToken);
+  const {
+    balances: variableDebtTokenBalances,
+    allowances: variableDebtTokenAllownaces,
+    actions: { fetchAllowance: fetchVariableDebtTokenAllownace },
+  } = useTokens(variableDebtTokenList, TokenType.DebtToken);
 
   const { delegateTokens } = useDelegation(
     stableDebtTokenBalances,
@@ -30,6 +37,12 @@ function useFlow() {
   const approveProgress = useApproveProgress(aTokenAllowances, aTokenBalances);
   const delegationProgress = useApproveDelegationProgress(delegateTokens);
   const [currentStep, setCurrentStep] = React.useState<Step>(Step.ONE);
+
+  usePolling(() => {
+    fetchAllowance();
+    fetchStableDebtTokenAllowance();
+    fetchVariableDebtTokenAllownace();
+  }, 5000);
 
   const changeStep = React.useCallback((step: Step) => {
     setCurrentStep(step);
@@ -66,6 +79,7 @@ function useFlow() {
   const moveDelegationStep = () => {
     console.log(approveProgress);
     // check all the a tokens are approved
+    console.log("approveProgress", approveProgress);
     if (approveProgress !== 1) {
       /**
        * @Todo add toast to ask user to approve all tokens

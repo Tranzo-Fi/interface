@@ -1,7 +1,7 @@
 import { truncateAddress } from "utils/address";
 import { CHAIN_ID } from "connector";
 import { TOKEN_LIST } from "./../constants/tokens";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { aTokenList, stableDebtTokenList, variableDebtTokenList } from "constants/tokens";
 import { TokenType } from "types/token.types";
 import useTokens from "./useTokens";
@@ -85,28 +85,126 @@ const useTranzo = () => {
         stableDebtTokenBalance: BigNumber.from(0),
       });
     });
-
-  const tranzoTransfer = useContractCall(
-    async (recipientAddress: string) => {
-      const currentWalletAddress = await signer.getAddress();
-      if (currentWalletAddress !== fromAccount.address) {
-        alert(`Please switch to ${truncateAddress(fromAccount.address)}`);
-        return;
-      }
-      console.log("tranzo", TRANZO_CONTRACT_ADDRESS[CHAIN_ID.Kovan]);
-
-      const contract = tranzo.attach(TRANZO_CONTRACT_ADDRESS[CHAIN_ID.Kovan].toString());
-      console.log(contract);
-      console.log(signer);
-      const receipt = await executeWithGasLimit(contract!.connect(signer), "transferAccount", [
-        recipientAddress,
-        aTokenTranzoList,
-        debtTokenTranzoList,
-      ]);
-      return receipt;
+  const CONTRACT_ABI = [
+    {
+      inputs: [{ internalType: "address", name: "_addressProvider", type: "address" }],
+      stateMutability: "nonpayable",
+      type: "constructor",
     },
-    [executeWithGasLimit, signer, fromAccount, tranzo]
-  );
+    {
+      anonymous: false,
+      inputs: [
+        { indexed: true, internalType: "address", name: "_from", type: "address" },
+        { indexed: true, internalType: "address", name: "_assetAddress", type: "address" },
+        { indexed: false, internalType: "uint256", name: "amount", type: "uint256" },
+      ],
+      name: "LogWithdraw",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        { indexed: true, internalType: "address", name: "previousOwner", type: "address" },
+        { indexed: true, internalType: "address", name: "newOwner", type: "address" },
+      ],
+      name: "OwnershipTransferred",
+      type: "event",
+    },
+    {
+      inputs: [],
+      name: "ADDRESSES_PROVIDER",
+      outputs: [{ internalType: "contract ILendingPoolAddressesProviderV2", name: "", type: "address" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "LENDING_POOL",
+      outputs: [{ internalType: "contract ILendingPoolV2", name: "", type: "address" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        { internalType: "address[]", name: "assets", type: "address[]" },
+        { internalType: "uint256[]", name: "amounts", type: "uint256[]" },
+        { internalType: "uint256[]", name: "premiums", type: "uint256[]" },
+        { internalType: "address", name: "initiator", type: "address" },
+        { internalType: "bytes", name: "params", type: "bytes" },
+      ],
+      name: "executeOperation",
+      outputs: [{ internalType: "bool", name: "", type: "bool" }],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "owner",
+      outputs: [{ internalType: "address", name: "", type: "address" }],
+      stateMutability: "view",
+      type: "function",
+    },
+    { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" },
+    {
+      inputs: [
+        { internalType: "address", name: "_recipientAccount", type: "address" },
+        {
+          components: [
+            { internalType: "address", name: "tokenAddress", type: "address" },
+            { internalType: "uint256", name: "stableDebtTokenBalance", type: "uint256" },
+            { internalType: "uint256", name: "variableDebtTokenBalance", type: "uint256" },
+          ],
+          internalType: "struct TransferAccount.DebtTokenBalance[]",
+          name: "_DebtTokenBalance",
+          type: "tuple[]",
+        },
+        {
+          components: [
+            { internalType: "address", name: "Token", type: "address" },
+            { internalType: "address", name: "aTokenAddress", type: "address" },
+            { internalType: "uint256", name: "aTokenBalance", type: "uint256" },
+          ],
+          internalType: "struct TransferAccount.aTokenBalance[]",
+          name: "_aTokenBalance",
+          type: "tuple[]",
+        },
+      ],
+      name: "transferAccount",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
+      name: "transferOwnership",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [{ internalType: "address", name: "_assetAddress", type: "address" }],
+      name: "withdraw",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    { stateMutability: "payable", type: "receive" },
+  ];
+  const tranzoTransfer = async (recepientAddress: string) => {
+    console.log(recepientAddress);
+    const contract = new ethers.Contract(
+      "0xB12822917909ce07712Bb4602bb46dF0353e2A88",
+      CONTRACT_ABI,
+      fromAccount.signer || undefined
+    );
+    console.log("siggner", fromAccount.signer);
+    console.log("contractx", contract);
+    const params = [recepientAddress, debtTokenTranzoList, aTokenTranzoList];
+    console.log("transferAccount params: ", params);
+    const action = "transferAccount";
+    const unsignedRawTx = await contract[action](...params);
+    console.log(unsignedRawTx);
+  };
 
   return {
     actions: {

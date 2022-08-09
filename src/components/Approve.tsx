@@ -1,9 +1,10 @@
+import { TransactionReceipt } from "@ethersproject/providers";
 import { CHAIN_ID } from "connector";
 import { aTokenList } from "constants/tokens";
 import { Connection } from "container/connection";
 import { TRANZO_CONTRACT_ADDRESS } from "container/contract";
 import { Global } from "container/global";
-import { ethers } from "ethers";
+import { ContractTransaction, ethers } from "ethers";
 import useApproveProgress from "hooks/useApproveProgress";
 import useToken from "hooks/useToken";
 import useTokens, { AllownaceTokenType } from "hooks/useTokens";
@@ -37,15 +38,22 @@ const Approve = (props: Props) => {
     },
   } = Global.useContainer();
 
-  const { balances: aTokenBalances, allowances: aTokenAllowances } = useTokens(aTokenList, TokenType.AToken);
+  const {
+    balances: aTokenBalances,
+    allowances: aTokenAllowances,
+    actions: { fetchAllowance },
+  } = useTokens(aTokenList, TokenType.AToken);
   const progress = useApproveProgress(aTokenAllowances, aTokenBalances);
   const { approve } = useToken(TokenType.AToken, fromSigner?.signer || undefined); // fromSigner is signer of wallet from where positions to be moved from
 
   const doApprove = React.useCallback(
-    (tokenAddress: string, amount: ethers.BigNumber) => {
-      approve(tokenAddress, TRANZO_CONTRACT_ADDRESS[CHAIN_ID.Kovan], amount);
+    async (tokenAddress: string, amount: ethers.BigNumber) => {
+      const receipt: TransactionReceipt = await approve(tokenAddress, TRANZO_CONTRACT_ADDRESS[CHAIN_ID.Kovan], amount);
+      if (receipt.transactionHash) {
+        fetchAllowance(); // refresh allownaces
+      }
     },
-    [approve]
+    [approve, fetchAllowance]
   );
 
   const approveTokens = React.useMemo(() => {

@@ -102,6 +102,9 @@ const useTokens = (tokenList: Token[], tokenType: TokenType) => {
     allowances,
     isBalanceLoading,
     balances,
+    actions: {
+      fetchAllowance,
+    },
   };
 };
 

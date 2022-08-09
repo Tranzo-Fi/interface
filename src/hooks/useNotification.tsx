@@ -1,11 +1,4 @@
-import { useCallback } from "react";
 import { toast } from "react-toastify";
-
-const defaultConfig = {
-  position: "bottom",
-  duration: 3000,
-  isClosable: true,
-};
 
 export type NotificationPayloadType = {
   title: string | JSX.Element;

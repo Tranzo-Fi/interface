@@ -1,3 +1,4 @@
+import { TransactionReceipt } from "@ethersproject/providers";
 import { CHAIN_ID } from "connector";
 import { stableDebtTokenList, variableDebtTokenList } from "constants/tokens";
 import { TRANZO_CONTRACT_ADDRESS } from "container/contract";
@@ -17,14 +18,16 @@ import Progress from "./primitives/Progress";
 type Props = {};
 
 const Delegate = (props: Props) => {
-  const { balances: stableDebtTokenBalances, allowances: stableDebtTokenAllowances } = useTokens(
-    stableDebtTokenList,
-    TokenType.DebtToken
-  );
-  const { balances: variableDebtTokenBalances, allowances: variableDebtTokenAllownaces } = useTokens(
-    variableDebtTokenList,
-    TokenType.DebtToken
-  );
+  const {
+    balances: stableDebtTokenBalances,
+    allowances: stableDebtTokenAllowances,
+    actions: { fetchAllowance: fetchStableDebtTokenAllowance },
+  } = useTokens(stableDebtTokenList, TokenType.DebtToken);
+  const {
+    balances: variableDebtTokenBalances,
+    allowances: variableDebtTokenAllownaces,
+    actions: { fetchAllowance: fetchVariableDebtTokenAllowance },
+  } = useTokens(variableDebtTokenList, TokenType.DebtToken);
 
   const { delegateTokens } = useDelegation(
     stableDebtTokenBalances,
@@ -41,10 +44,14 @@ const Delegate = (props: Props) => {
   const progress = useApproveDelegationProgress(delegateTokens);
   const { approveDelegation } = useToken(TokenType.DebtToken, toAccountSigner?.signer || undefined);
   const doDelegateApprove = React.useCallback(
-    (tokenAddress: string, amount: ethers.BigNumber) => {
-      approveDelegation(tokenAddress, TRANZO_CONTRACT_ADDRESS[CHAIN_ID.Kovan], amount);
+    async (tokenAddress: string, amount: ethers.BigNumber) => {
+      const receipt: TransactionReceipt = await approveDelegation(tokenAddress, TRANZO_CONTRACT_ADDRESS[CHAIN_ID.Kovan], amount);
+      if (receipt.transactionHash) {
+        fetchStableDebtTokenAllowance();
+        fetchVariableDebtTokenAllowance();
+      }
     },
-    [approveDelegation]
+    [approveDelegation, fetchStableDebtTokenAllowance, fetchVariableDebtTokenAllowance]
   );
   return (
     <Layout title={"Aprove Delegation"}>
