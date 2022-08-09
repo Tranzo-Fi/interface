@@ -1,24 +1,33 @@
+import React from "react";
 import { toast } from "react-toastify";
+import { Text } from "rebass";
 
-export type NotificationPayloadType = {
+type NotificationPropType = {
   title: string | JSX.Element;
   description: string | JSX.Element;
 };
-
-export function useNotification() {
-  const notify = (payload: NotificationPayloadType) => {
+const useNotiifcation = () => {
+  const notify = React.useCallback(({ title, description }: NotificationPropType) => {
     toast(
-      <div>
-        <p>{payload.title}</p>
-        <p>{payload.description}</p>
-      </div>,
+      <>
+        <Text fontFamily={"Roboto Mono"} fontWeight={"bold"} fontSize={14} color={"flash"}>
+          {title}
+        </Text>
+        <Text fontFamily={"Roboto Mono"} fontSize={12} color={"grey"}>
+          {description}
+        </Text>
+      </>,
       {
-        type: "default",
+        className: "app-notification",
+        bodyClassName: "grow-font-size",
+        progressClassName: "fancy-progress-bar",
       }
     );
-  };
+  }, []);
 
   return {
     notify,
   };
-}
+};
+
+export default useNotiifcation;

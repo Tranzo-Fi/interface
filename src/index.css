@@ -1,7 +1,9 @@
 .white {
   color: white;
 }
-
+:root {
+  --toastify-color-progress-light: #514eec !important;
+}
 .flash {
   color: #514eec;
   font-size: 23px;
@@ -27,4 +29,13 @@
   100% {
     background-color: hsl(240, 24%, 20%);
   }
+}
+
+.app-notification {
+  background-color: #202033 !important;
+  color: #514eec !important;
+}
+
+.Toastify__close-button {
+  color: #514eec !important;
 }

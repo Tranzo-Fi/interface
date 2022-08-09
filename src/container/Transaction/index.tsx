@@ -1,4 +1,5 @@
 import React from "react";
+import { createContainer } from "unstated-next";
 
 import { BigNumber, ethers } from "ethers";
 import { Connection } from "container/connection";
@@ -6,8 +7,10 @@ import { ContractTransaction } from "@ethersproject/contracts";
 import { STORAGE_KEY } from "../../constants/storage";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { User } from "../user";
-import { createContainer } from "unstated-next";
+import useNotification from "hooks/useNotification";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { ExternalLink } from "components/ExternalLink";
+import { getEtherscanTxLink } from "utils/link";
 
 export const Transaction = createContainer(useTransaction);
 
@@ -25,6 +28,7 @@ function useTransaction() {
   const [receipts, setReceipts] = React.useState<TransactionReceipt[]>([]);
   const [latestTxData, setLatestTxData] = useLocalStorage(LATEST_TX_DATA.name, LATEST_TX_DATA.defaultValue);
   const [isInitialized, setIsInitialized] = React.useState<boolean>(false);
+  const { notify } = useNotification();
   const {
     state: { address },
   } = User.useContainer();
@@ -69,17 +73,32 @@ function useTransaction() {
       let tx, txHash;
       let isRejected = false;
       try {
+        notify({
+          title: "Transaction Started",
+          description: "Your transaction is sent to blockchain. Please wait.",
+        });
         setIsLoading(true);
         tx = await txAction;
         txHash = (tx as ContractTransaction).hash;
         setLatestTxData(JSON.stringify({ txHash }));
-
-        console.log(txHash);
+        notify({
+          title: "Transaction Completed",
+          description: <ExternalLink href={getEtherscanTxLink(txHash)}>View Transaction</ExternalLink>,
+        });
       } catch (error: any) {
         if (error.code && error.code === 4001) {
+          notify({
+            title: "Transaction Rejected",
+            description: "You have cancelled the transaction",
+          });
           // user cancelled tx
           isRejected = true;
           console.log("User cancelled tx");
+        } else {
+          notify({
+            title: "Transaction Failed",
+            description: `Error occurred. Tranasaction couldn't execute.`,
+          });
         }
         resetTxStatus();
       }
@@ -90,7 +109,7 @@ function useTransaction() {
         txHash,
       };
     },
-    [resetTxStatus, setLatestTxData]
+    [notify, resetTxStatus, setLatestTxData]
   );
 
   const execute = React.useCallback(

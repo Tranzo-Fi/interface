@@ -1,3 +1,4 @@
+import useNotification from "hooks/useNotification";
 import React from "react";
 import { createContainer } from "unstated-next";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -45,6 +46,8 @@ function usePostLogout(onLogout: Function) {
 
 function useUser() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
+  const wrongNetworkRef = React.useRef();
+  const { notify } = useNotification();
   const { active, account, activate, deactivate, chainId } = useWeb3React();
   const [, setConnectorId] = useLocalStorage(CONNECTOR_ID.name, CONNECTOR_ID.defaultValue);
   const {
@@ -52,7 +55,7 @@ function useUser() {
   } = Flow.useContainer();
 
   const {
-    actions: { clearSigners },
+    actions: { clearSigners, toggleWalletModal },
   } = Global.useContainer();
 
   usePostLogout(() => {
@@ -65,21 +68,15 @@ function useUser() {
       dispatch({ type: ACTIONS.LOGIN_SUCCESS, payload: { address: account } });
       const isWrongNetwork = chainId !== CHAIN_ID.Kovan;
       if (isWrongNetwork) {
-        window.alert("Unsupported chain");
-        // @ts-ignore
-        // wrongNetworkRef.current = notifyError({
-        //     title: "Wrong network",
-        //     description: `Please switch network to xDai.`,
-        //     isClosable: true,
-        //     duration: null,
-        // })
-      } else {
-        // if (wrongNetworkRef.current) {
-        //     closeNotify(wrongNetworkRef.current)
-        // }
+        notify({
+          title: "Wrong Network",
+          description: "Please use Kovan network", // todo: make this from a single source
+        });
+        toggleWalletModal(false);
+        // logout();
       }
     }
-  }, [account, active, chainId]);
+  }, [account, active, chainId, notify, toggleWalletModal]);
 
   const login = React.useCallback(
     (instance: AbstractConnector, connectorId: string, onActivate?: Function) => {
@@ -98,7 +95,7 @@ function useUser() {
           console.log(err);
         });
     },
-    [setConnectorId, activate]
+    [setConnectorId, dispatch, activate]
   );
 
   const logout = React.useCallback(() => {

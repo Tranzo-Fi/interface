@@ -3,7 +3,7 @@ import { Box, Flex } from "rebass/styled-components";
 
 import Header from "../../components/Header";
 import AppButton from "../../components/primitives/Button";
-import { Flow } from "../../container/flow";
+import { Flow } from "../../container/flow/index";
 import HomeFlow from "./components/HomeFlow";
 import Stepper from "./components/Stepper";
 import useTranzo from "hooks/useTranzo";

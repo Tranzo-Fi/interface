@@ -1,17 +1,22 @@
+import { Connection } from "../connection/index";
+import useNotification from "hooks/useNotification";
 import useApproveDelegationProgress from "hooks/useApproveDelegationProgress";
 import useApproveProgress from "hooks/useApproveProgress";
-import { TokenType } from "./../../types/token.types";
-import { aTokenList, stableDebtTokenList, variableDebtTokenList } from "./../../constants/tokens";
+import { TokenType } from "../../types/token.types";
+import { aTokenList, stableDebtTokenList, variableDebtTokenList } from "../../constants/tokens";
 import useTokens from "hooks/useTokens";
 import React from "react";
 import { createContainer } from "unstated-next";
 import { Step } from "../../types/app.types";
 import useDelegation from "hooks/useDelegation";
 import { usePolling } from "hooks/usePolling";
+import { ExternalLink } from "components/ExternalLink";
+import { getEtherscanTxLink } from "utils/link";
 
 export const Flow = createContainer(useFlow);
 
 function useFlow() {
+  const { account } = Connection.useContainer();
   const {
     balances: aTokenBalances,
     allowances: aTokenAllowances,
@@ -37,6 +42,7 @@ function useFlow() {
   const approveProgress = useApproveProgress(aTokenAllowances, aTokenBalances);
   const delegationProgress = useApproveDelegationProgress(delegateTokens);
   const [currentStep, setCurrentStep] = React.useState<Step>(Step.ONE);
+  const { notify } = useNotification();
 
   usePolling(() => {
     fetchAllowance();
@@ -72,7 +78,12 @@ function useFlow() {
 
   // Private functions
   const moveApproveStep = () => {
-    if (aTokenBalances.filter((t) => t.balance?.toString() !== "0").length === 0) return;
+    notify({
+      title: "Transaction started",
+      description: <ExternalLink href={getEtherscanTxLink("hey")}>View Transaction</ExternalLink>,
+    });
+
+    if (aTokenBalances.filter((t) => t.balance?.toString() !== "0").length === 0 || !account) return;
     changeStep(currentStep + 1);
   };
 
@@ -81,9 +92,10 @@ function useFlow() {
     // check all the a tokens are approved
     console.log("approveProgress", approveProgress);
     if (approveProgress !== 1) {
-      /**
-       * @Todo add toast to ask user to approve all tokens
-       */
+      notify({
+        title: "Approval Pending",
+        description: "Please approve all the tokens",
+      });
       return;
     }
     changeStep(currentStep + 1);
@@ -91,9 +103,10 @@ function useFlow() {
 
   const moveReviewPositions = () => {
     if (delegationProgress !== 1) {
-      /**
-       * @Todo add toast to ask user to approve all tokens
-       */
+      notify({
+        title: "Delegation Pending",
+        description: "Please delegate all the tokens",
+      });
     }
     changeStep(currentStep + 1);
   };

@@ -7,7 +7,15 @@ interface Props extends LinkProps {
 }
 export function ExternalLink({ href, children, ...props }: Props) {
   return (
-    <Link href={href} target="_blank" rel="noreferrer noopener" {...props}>
+    <Link
+      fontFamily={"Roboto Mono"}
+      fontSize={12}
+      color={"grey"}
+      href={href}
+      target="_blank"
+      rel="noreferrer noopener"
+      {...props}
+    >
       {children}
     </Link>
   );

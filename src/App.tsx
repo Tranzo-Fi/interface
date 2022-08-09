@@ -1,6 +1,7 @@
-import { ToastContainer } from "react-bootstrap";
 import { BrowserRouter, Switch } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Routes from "./components/utils/Routes";
 import WalletModal from "./components/wallet/WalletModal";

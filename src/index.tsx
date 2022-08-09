@@ -5,7 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Web3Provider } from "./web3";
 import { User } from "./container/user";
-import { Flow } from "./container/flow";
+import { Flow } from "./container/flow/index";
 import { Global } from "./container/global";
 import { Connection } from "./container/connection";
 import { Contract } from "./container/contract";

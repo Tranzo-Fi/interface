@@ -1,16 +1,19 @@
 import { TransactionReceipt } from "@ethersproject/providers";
 import { CHAIN_ID } from "connector";
 import { stableDebtTokenList, variableDebtTokenList } from "constants/tokens";
+import { Connection } from "container/connection";
 import { TRANZO_CONTRACT_ADDRESS } from "container/contract";
 import { Global } from "container/global";
 import { ethers } from "ethers";
 import useApproveDelegationProgress from "hooks/useApproveDelegationProgress";
 import useDelegation from "hooks/useDelegation";
+import useNotiifcation from "hooks/useNotification";
 import useToken from "hooks/useToken";
 import useTokens from "hooks/useTokens";
 import React from "react";
 import { Box, Flex } from "rebass";
 import { TokenType } from "types/token.types";
+import { truncateAddress } from "utils/address";
 import DelegateTokenItem, { TokenWithAllowanceAndBalanceType } from "./DelegateTokenItem";
 import Layout from "./primitives/Layout";
 import Progress from "./primitives/Progress";
@@ -18,6 +21,7 @@ import Progress from "./primitives/Progress";
 type Props = {};
 
 const Delegate = (props: Props) => {
+  const { notify } = useNotiifcation();
   const {
     balances: stableDebtTokenBalances,
     allowances: stableDebtTokenAllowances,
@@ -41,17 +45,25 @@ const Delegate = (props: Props) => {
       signer: { to: toAccountSigner },
     },
   } = Global.useContainer();
+  const { account } = Connection.useContainer();
   const progress = useApproveDelegationProgress(delegateTokens);
   const { approveDelegation } = useToken(TokenType.DebtToken, toAccountSigner?.signer || undefined);
   const doDelegateApprove = React.useCallback(
     async (tokenAddress: string, amount: ethers.BigNumber) => {
+      if (account !== toAccountSigner.address) {
+        notify({
+          title: "Incorrect Account",
+          description: `Please switch to ${truncateAddress(toAccountSigner.address)}`,
+        });
+        return;
+      }
       const receipt: TransactionReceipt = await approveDelegation(tokenAddress, TRANZO_CONTRACT_ADDRESS[CHAIN_ID.Kovan], amount);
       if (receipt.transactionHash) {
         fetchStableDebtTokenAllowance();
         fetchVariableDebtTokenAllowance();
       }
     },
-    [approveDelegation, fetchStableDebtTokenAllowance, fetchVariableDebtTokenAllowance]
+    [account, approveDelegation, fetchStableDebtTokenAllowance, fetchVariableDebtTokenAllowance, notify, toAccountSigner.address]
   );
   return (
     <Layout title={"Aprove Delegation"}>
