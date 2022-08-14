@@ -74,8 +74,10 @@ const useTokens = (tokenList: Token[], tokenType: TokenType) => {
     setIsAllowanceLoading(true);
     const allowanceContractCalls: ContractCall[] = [];
     tokenList.forEach((token) => {
-      const approver = TokenType.AToken ? fromAccount.address : toAccount.address;
+      const approver = tokenType === TokenType.AToken ? fromAccount.address : toAccount.address;
+      console.log(TokenType.AToken, "approver", approver);
       if (erc20 && ethMulticallProvider && token && approver) {
+        console.log("allowanceFuncName", allowanceFuncName);
         const contract = new MulticallContract(token.address, erc20.interface.fragments as Fragment[]);
         allowanceContractCalls.push(contract[allowanceFuncName](approver, TRANZO_CONTRACT_ADDRESS[CHAIN_ID.Kovan]));
       }
@@ -91,7 +93,7 @@ const useTokens = (tokenList: Token[], tokenType: TokenType) => {
       setAllowances([]);
     }
     setIsAllowanceLoading(false);
-  }, [tokenList, ethMulticallProvider, fromAccount.address, toAccount.address, erc20, allowanceFuncName]);
+  }, [tokenList, ethMulticallProvider, tokenType, fromAccount.address, toAccount.address, erc20, allowanceFuncName]);
 
   React.useEffect(() => {
     fetchAllowance();

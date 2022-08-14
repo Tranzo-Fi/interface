@@ -17,7 +17,7 @@ const ApproveTokenItem = ({ balance, allowance, onClick }: Props) => {
     return parseFloat(allowance?.allowance.toString()) >= parseFloat(balance?.balance.toString());
   }, [allowance?.allowance, balance?.balance]);
   const handleClick = () => {
-    // if (isDisabled) return;
+    if (isDisabled) return;
     const amountWithBuffer = increaseByPercent(balance.balance, 0.001); // 0.001 is buffer - workaround
     onClick(balance.address, amountWithBuffer);
   };

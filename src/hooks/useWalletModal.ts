@@ -1,3 +1,4 @@
+import useNotification from "hooks/useNotification";
 import { Global } from "container/global";
 import { useWeb3React } from "@web3-react/core";
 import { User } from "container/user";
@@ -11,6 +12,7 @@ export enum GetSignerType {
 
 const useWalletModal = () => {
   const [type, setType] = React.useState(GetSignerType.GET_TO_SIGNER);
+  const { notify } = useNotification();
   const {
     state: { address },
     actions: { deactivateWallet },
@@ -37,19 +39,34 @@ const useWalletModal = () => {
   }, [type]);
 
   // private functions
+
+  const showWalletEmptyError = React.useCallback(() => {
+    notify({ title: "Wallet Error", description: "Please select a wallet account" });
+    deactivateWallet();
+  }, [deactivateWallet, notify]);
+
   const setToWalletSigner = React.useCallback(() => {
+    if (address === "") {
+      showWalletEmptyError();
+      return;
+    }
     setToSigner({
       signer: library?.getSigner() || null,
       address: account || "",
     });
     deactivateWallet();
     setType(GetSignerType.GET_FROM_SIGNER);
-  }, [account, deactivateWallet, library, setToSigner]);
+  }, [account, address, deactivateWallet, library, setToSigner, showWalletEmptyError]);
 
   const setFromWalletSigner = React.useCallback(() => {
     if (address === toSignerData?.address) {
-      alert("To and from account cannot be same");
+      notify({ title: "Same wallet account", description: "To and from account cannot be same" });
       deactivateWallet();
+      return;
+    }
+
+    if (address === "") {
+      showWalletEmptyError();
       return;
     }
     setFromSigner({
@@ -57,7 +74,7 @@ const useWalletModal = () => {
       address: account || "",
     });
     setType(GetSignerType.SHOW_PREVIEW);
-  }, [account, address, library, deactivateWallet, setFromSigner, toSignerData?.address]);
+  }, [address, toSignerData?.address, setFromSigner, library, account, notify, deactivateWallet, showWalletEmptyError]);
 
   const handleWalletModalNext = React.useCallback(() => {
     switch (type) {

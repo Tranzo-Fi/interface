@@ -1,4 +1,5 @@
 import { TransactionReceipt } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
 import { CHAIN_ID } from "connector";
 import { stableDebtTokenList, variableDebtTokenList } from "constants/tokens";
 import { Connection } from "container/connection";
@@ -27,6 +28,7 @@ const Delegate = (props: Props) => {
     allowances: stableDebtTokenAllowances,
     actions: { fetchAllowance: fetchStableDebtTokenAllowance },
   } = useTokens(stableDebtTokenList, TokenType.DebtToken);
+  // console.log("stableDebtTokenAllowances", stableDebtTokenAllowances.find((t) => t.symbol === "DAI")?.allowance.toString());
   const {
     balances: variableDebtTokenBalances,
     allowances: variableDebtTokenAllownaces,
@@ -39,31 +41,45 @@ const Delegate = (props: Props) => {
     variableDebtTokenBalances,
     variableDebtTokenAllownaces
   );
-
+  console.log("delegateTokens", delegateTokens);
   const {
     state: {
       signer: { to: toAccountSigner },
     },
+    actions: { setConenctTo },
   } = Global.useContainer();
+  const { deactivate } = useWeb3React();
   const { account } = Connection.useContainer();
   const progress = useApproveDelegationProgress(delegateTokens);
   const { approveDelegation } = useToken(TokenType.DebtToken, toAccountSigner?.signer || undefined);
   const doDelegateApprove = React.useCallback(
     async (tokenAddress: string, amount: ethers.BigNumber) => {
+      console.log("hey!");
       if (account !== toAccountSigner.address) {
+        deactivate();
         notify({
           title: "Incorrect Account",
           description: `Please switch to ${truncateAddress(toAccountSigner.address)}`,
         });
+        setConenctTo(toAccountSigner.address);
         return;
       }
       const receipt: TransactionReceipt = await approveDelegation(tokenAddress, TRANZO_CONTRACT_ADDRESS[CHAIN_ID.Kovan], amount);
-      if (receipt.transactionHash) {
+      if (receipt?.transactionHash) {
         fetchStableDebtTokenAllowance();
         fetchVariableDebtTokenAllowance();
       }
     },
-    [account, approveDelegation, fetchStableDebtTokenAllowance, fetchVariableDebtTokenAllowance, notify, toAccountSigner.address]
+    [
+      account,
+      approveDelegation,
+      deactivate,
+      fetchStableDebtTokenAllowance,
+      fetchVariableDebtTokenAllowance,
+      notify,
+      setConenctTo,
+      toAccountSigner.address,
+    ]
   );
   return (
     <Layout title={"Aprove Delegation"}>

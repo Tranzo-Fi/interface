@@ -73,16 +73,16 @@ function useTransaction() {
       let tx, txHash;
       let isRejected = false;
       try {
-        notify({
-          title: "Transaction Started",
-          description: "Your transaction is sent to blockchain. Please wait.",
-        });
+        // notify({
+        //   title: "Transaction Started",
+        //   description: "Your transaction is sent to blockchain. Please wait.",
+        // });
         setIsLoading(true);
         tx = await txAction;
         txHash = (tx as ContractTransaction).hash;
         setLatestTxData(JSON.stringify({ txHash }));
         notify({
-          title: "Transaction Completed",
+          title: "Transaction Submitted",
           description: <ExternalLink href={getEtherscanTxLink(txHash)}>View Transaction</ExternalLink>,
         });
       } catch (error: any) {

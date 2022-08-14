@@ -7,6 +7,7 @@ enum ACTIONS {
   SET_TO_SIGNER = "SET_TO_SIGNER",
   SET_FROM_SIGNER = "SET_FROM_SIGNER",
   CLEAR_SIGNERS = "CLEAR_SIGNERS",
+  SET_CONNECT_TO = "SET_CONNECT_TO",
 }
 
 const initialSignerState = {
@@ -25,13 +26,15 @@ const initialState = {
     isOpen: false,
   },
   signer: initialSignerState,
+  connectTo: "",
 };
 
 type ActionType =
   | { type: ACTIONS.TOGGLE_WALLET_MODAL; payload: boolean }
   | { type: ACTIONS.SET_TO_SIGNER; payload: { signer: any; address: string } }
   | { type: ACTIONS.SET_FROM_SIGNER; payload: { signer: any; address: string } }
-  | { type: ACTIONS.CLEAR_SIGNERS };
+  | { type: ACTIONS.CLEAR_SIGNERS }
+  | { type: ACTIONS.SET_CONNECT_TO; payload: string };
 
 export const Global = createContainer(useGlobal);
 
@@ -41,6 +44,13 @@ function useGlobal() {
   const toggleWalletModal = React.useCallback(
     (payload: boolean) => {
       dispatch({ type: ACTIONS.TOGGLE_WALLET_MODAL, payload });
+    },
+    [dispatch]
+  );
+
+  const setConenctTo = React.useCallback(
+    (payload: string) => {
+      dispatch({ type: ACTIONS.SET_CONNECT_TO, payload });
     },
     [dispatch]
   );
@@ -70,6 +80,7 @@ function useGlobal() {
       setToSigner,
       setFromSigner,
       clearSigners,
+      setConenctTo,
     },
   };
 }
@@ -89,6 +100,9 @@ const reducer = (draft: typeof initialState, action: ActionType): any => {
       break;
     case ACTIONS.CLEAR_SIGNERS:
       draft.signer = initialSignerState;
+      break;
+    case ACTIONS.SET_CONNECT_TO:
+      draft.connectTo = action.payload;
       break;
     default:
       return draft;

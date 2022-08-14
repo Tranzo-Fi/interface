@@ -18,6 +18,7 @@ const Home = (props: Props) => {
   } = useTranzo();
   const {
     currentStep,
+    loading,
     actions: { changeStep, buttonFlow },
   } = Flow.useContainer();
 
@@ -55,6 +56,7 @@ const Home = (props: Props) => {
           </Box>
         </Box>
         <AppButton
+          loading={loading}
           style={{
             marginLeft: "10px",
             padding: `15px 40px 15px 40px`,

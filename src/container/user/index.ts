@@ -46,7 +46,6 @@ function usePostLogout(onLogout: Function) {
 
 function useUser() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  const wrongNetworkRef = React.useRef();
   const { notify } = useNotification();
   const { active, account, activate, deactivate, chainId } = useWeb3React();
   const [, setConnectorId] = useLocalStorage(CONNECTOR_ID.name, CONNECTOR_ID.defaultValue);
@@ -55,7 +54,7 @@ function useUser() {
   } = Flow.useContainer();
 
   const {
-    actions: { clearSigners, toggleWalletModal },
+    actions: { clearSigners, toggleWalletModal, setConenctTo },
   } = Global.useContainer();
 
   usePostLogout(() => {
@@ -72,14 +71,17 @@ function useUser() {
           title: "Wrong Network",
           description: "Please use Kovan network", // todo: make this from a single source
         });
+        console.log("---connected---");
         toggleWalletModal(false);
+        setConenctTo("");
         // logout();
       }
     }
-  }, [account, active, chainId, notify, toggleWalletModal]);
+  }, [account, active, chainId, notify, setConenctTo, toggleWalletModal]);
 
   const login = React.useCallback(
     (instance: AbstractConnector, connectorId: string, onActivate?: Function) => {
+      console.log("hey");
       dispatch({ type: ACTIONS.LOGIN_REQUEST });
       setConnectorId(connectorId);
       activate(instance, () => {}, true)
@@ -95,7 +97,7 @@ function useUser() {
           console.log(err);
         });
     },
-    [setConnectorId, dispatch, activate]
+    [deactivate, setConnectorId, activate]
   );
 
   const logout = React.useCallback(() => {

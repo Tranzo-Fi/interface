@@ -50,6 +50,9 @@ const Header = (props: Props) => {
               <Box
                 onClick={() => switchNetwork(library, 42)}
                 p={2}
+                fontSize={12}
+                height={40}
+                mt={1}
                 sx={{
                   borderRadius: 8,
                   border: `1px solid #3d3d9c`,
@@ -59,8 +62,8 @@ const Header = (props: Props) => {
                     background: "#242438",
                   },
                 }}
-                backgroundColor={"fadedDark"}
-                color={"grey"}
+                backgroundColor={"flash"}
+                color={"white"}
                 display={"grid"}
                 alignContent={"center"}
                 mr={2}

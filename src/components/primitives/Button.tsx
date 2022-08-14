@@ -5,10 +5,11 @@ type Props = {
   label: string;
   style?: React.CSSProperties;
   rightIcon?: React.ReactElement;
+  loading?: boolean;
   onPress: (e: React.MouseEvent<HTMLElement>) => void;
 };
 
-const AppButton = ({ label, style, rightIcon, onPress }: Props) => {
+const AppButton = ({ label, style, rightIcon, onPress, loading = false }: Props) => {
   return (
     <Button
       onClick={onPress}
@@ -21,7 +22,13 @@ const AppButton = ({ label, style, rightIcon, onPress }: Props) => {
         },
       }}
     >
-      {label} {rightIcon}
+      {loading ? (
+        <i className="fa fa-spinner fa-spin"></i>
+      ) : (
+        <>
+          {label} {rightIcon}
+        </>
+      )}
     </Button>
   );
 };

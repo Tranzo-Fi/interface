@@ -3,6 +3,7 @@ import { Flex, Image, Box, Text } from "rebass/styled-components";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useWeb3React } from "@web3-react/core";
 import { User } from "../../container/user";
+import { Global } from "container/global";
 
 type Props = {
   name: string;
@@ -13,14 +14,13 @@ type Props = {
 };
 
 const WalletButton = ({ name, description, icon, connector, id }: Props) => {
-  // const {
-  //   actions: { toggleWalletModal },
-  // } = Global.useContainer();
+  const {
+    actions: { setConenctTo },
+  } = Global.useContainer();
   const {
     actions: { login },
   } = User.useContainer();
   const { connector: activeConnector } = useWeb3React();
-
   const isActiveConnector = connector === activeConnector;
 
   const handleOnClick = React.useCallback(() => {
@@ -38,8 +38,9 @@ const WalletButton = ({ name, description, icon, connector, id }: Props) => {
         login(connector, id);
       }
     }
-    // toggleWalletModal(false);
-  }, [isActiveConnector, login, connector, id]);
+
+    setConenctTo("");
+  }, [isActiveConnector, setConenctTo, id, login, connector]);
 
   return (
     <Flex

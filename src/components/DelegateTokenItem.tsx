@@ -20,7 +20,9 @@ const DelegateTokenItem = ({ token, onClick }: Props) => {
     return parseFloat(token?.allowance?.toString()) >= parseFloat(token?.balance?.toString());
   }, [token?.allowance, token?.balance]);
   const handleClick = () => {
+    if (isDisabled) return;
     const amountWithBuffer = increaseByPercent(token.balance, 0.01); // buffer 1%
+    console.log(amountWithBuffer.toString());
     onClick(token.address, amountWithBuffer);
   };
   return (
