@@ -11,6 +11,7 @@ import useNotification from "hooks/useNotification";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { ExternalLink } from "components/ExternalLink";
 import { getEtherscanTxLink } from "utils/link";
+import { toast } from "react-toastify";
 
 export const Transaction = createContainer(useTransaction);
 
@@ -23,12 +24,13 @@ const { LATEST_TX_DATA } = STORAGE_KEY;
 const MAX_RETRY_TIMES = 5;
 
 function useTransaction() {
+  const notifyRef = React.useRef<string>();
   const [error, setError] = React.useState<any>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [receipts, setReceipts] = React.useState<TransactionReceipt[]>([]);
   const [latestTxData, setLatestTxData] = useLocalStorage(LATEST_TX_DATA.name, LATEST_TX_DATA.defaultValue);
   const [isInitialized, setIsInitialized] = React.useState<boolean>(false);
-  const { notify } = useNotification();
+  const { notify, updateNotify } = useNotification();
   const {
     state: { address },
   } = User.useContainer();
@@ -81,10 +83,11 @@ function useTransaction() {
         tx = await txAction;
         txHash = (tx as ContractTransaction).hash;
         setLatestTxData(JSON.stringify({ txHash }));
-        notify({
-          title: "Transaction Submitted",
-          description: <ExternalLink href={getEtherscanTxLink(txHash)}>View Transaction</ExternalLink>,
-        });
+        notifyRef.current = notify({
+          title: "Transaction Processing",
+          description: <i className="fa fa-spinner fa-spin"></i>,
+          autoClose: false,
+        }) as string;
       } catch (error: any) {
         if (error.code && error.code === 4001) {
           notify({
@@ -122,7 +125,11 @@ function useTransaction() {
       try {
         receipt = await (tx as ContractTransaction).wait();
         setReceipts((prev) => [...prev, receipt as TransactionReceipt]);
-        console.log("receipt", receipt);
+        updateNotify(notifyRef.current as string, {
+          autoClose: 1,
+          title: "Transaction Completed",
+          description: <ExternalLink href={getEtherscanTxLink(receipt?.transactionHash)}>View Transaction</ExternalLink>,
+        });
       } catch (error) {
         console.log("execute - error", error);
       }
@@ -130,12 +137,12 @@ function useTransaction() {
       resetTxStatus();
       return receipt;
     },
-    [resetTxStatus, userConfirmTx]
+    [resetTxStatus, updateNotify, userConfirmTx]
   );
 
   const executeWithGasLimit = React.useCallback(
     async (contract: ethers.Contract, funcName: string, args: any[]) => {
-      console.log(address);
+      console.log("heree", address);
       const overrides = { from: address };
       const gasLimitRatio = BigNumber.from(2);
       let gasLimit: BigNumber;
@@ -144,6 +151,11 @@ function useTransaction() {
       try {
         gasLimit = await contract.estimateGas[funcName](...args, overrides);
         receipt = await execute(contract[funcName](...args, { ...overrides, gasLimit: gasLimitRatio.mul(gasLimit) }));
+        updateNotify(notifyRef.current as string, {
+          autoClose: 5000,
+          title: "Transaction Completed",
+          description: <ExternalLink href={getEtherscanTxLink(receipt?.transactionHash)}>View Transaction</ExternalLink>,
+        });
       } catch (err) {
         console.log("executeWithGasLimit - error", err);
         setError(err);
@@ -151,7 +163,7 @@ function useTransaction() {
 
       return receipt;
     },
-    [address, execute]
+    [address, execute, updateNotify]
   );
   return {
     error,

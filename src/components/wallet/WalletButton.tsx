@@ -4,6 +4,7 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useWeb3React } from "@web3-react/core";
 import { User } from "../../container/user";
 import { Global } from "container/global";
+import useNotiifcation from "hooks/useNotification";
 
 type Props = {
   name: string;
@@ -14,6 +15,7 @@ type Props = {
 };
 
 const WalletButton = ({ name, description, icon, connector, id }: Props) => {
+  const { notify } = useNotiifcation();
   const {
     actions: { setConenctTo },
   } = Global.useContainer();
@@ -33,6 +35,14 @@ const WalletButton = ({ name, description, icon, connector, id }: Props) => {
           })
           .then(() => {
             login(connector, id);
+          })
+          .catch((error: any) => {
+            if (error?.code === -32002) {
+              notify({
+                title: "Wallet Error",
+                description: "Another request is already processing, please open your wallet manually.",
+              });
+            }
           });
       } else {
         login(connector, id);

@@ -49,7 +49,7 @@ const Approve = (props: Props) => {
   const doApprove = React.useCallback(
     async (tokenAddress: string, amount: ethers.BigNumber) => {
       const receipt: TransactionReceipt = await approve(tokenAddress, TRANZO_CONTRACT_ADDRESS[CHAIN_ID.Kovan], amount);
-      if (receipt.transactionHash) {
+      if (receipt && receipt?.transactionHash) {
         fetchAllowance(); // refresh allownaces
       }
     },

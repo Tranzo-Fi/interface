@@ -14,6 +14,8 @@ export const Flow = createContainer(useFlow);
 
 function useFlow() {
   const [loading, setLoading] = React.useState(false);
+  const [continueApprove, setContinueApprove] = React.useState(false);
+  const [continueDelegation, setContinueDelegation] = React.useState(false);
   const { account } = Connection.useContainer();
   const {
     balances: aTokenBalances,
@@ -42,15 +44,38 @@ function useFlow() {
   const [currentStep, setCurrentStep] = React.useState<Step>(Step.ONE);
   const { notify } = useNotification();
 
-  // usePolling(() => {
-  //   fetchAllowance();
-  //   fetchStableDebtTokenAllowance();
-  //   fetchVariableDebtTokenAllownace();
-  // }, 5000);
-
   const changeStep = React.useCallback((step: Step) => {
     setCurrentStep(step);
   }, []);
+
+  // todo: hot fix, needs to be changed
+  React.useEffect(() => {
+    if (continueApprove) {
+      // check all the a tokens are approved
+      if (approveProgress !== 1) {
+        notify({
+          title: "Approval Pending",
+          description: "Please approve all the tokens",
+        });
+        return;
+      }
+      changeStep(currentStep + 1);
+    }
+  }, [approveProgress, changeStep, continueApprove, currentStep, notify]);
+
+  // todo: hot fix, needs to be changed
+  React.useEffect(() => {
+    if (continueDelegation) {
+      if (delegationProgress !== 1) {
+        notify({
+          title: "Delegation Pending",
+          description: "Please delegate all the tokens",
+        });
+        return;
+      }
+      changeStep(currentStep + 1);
+    }
+  }, [changeStep, continueDelegation, currentStep, delegationProgress, notify]);
 
   const buttonFlow = (currentStep: Step) => {
     switch (currentStep) {
@@ -81,17 +106,10 @@ function useFlow() {
   };
 
   const moveDelegationStep = async () => {
+    setLoading(true);
     await fetchAllowance();
     setLoading(false);
-    // check all the a tokens are approved
-    if (approveProgress !== 1) {
-      notify({
-        title: "Approval Pending",
-        description: "Please approve all the tokens",
-      });
-      return;
-    }
-    changeStep(currentStep + 1);
+    setContinueApprove(true);
   };
 
   const moveReviewPositions = async () => {
@@ -99,13 +117,7 @@ function useFlow() {
     await fetchStableDebtTokenAllowance();
     await fetchVariableDebtTokenAllownace();
     setLoading(false);
-    if (delegationProgress !== 1) {
-      notify({
-        title: "Delegation Pending",
-        description: "Please delegate all the tokens",
-      });
-    }
-    changeStep(currentStep + 1);
+    setContinueDelegation(true);
   };
 
   return {

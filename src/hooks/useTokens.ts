@@ -75,9 +75,7 @@ const useTokens = (tokenList: Token[], tokenType: TokenType) => {
     const allowanceContractCalls: ContractCall[] = [];
     tokenList.forEach((token) => {
       const approver = tokenType === TokenType.AToken ? fromAccount.address : toAccount.address;
-      console.log(TokenType.AToken, "approver", approver);
       if (erc20 && ethMulticallProvider && token && approver) {
-        console.log("allowanceFuncName", allowanceFuncName);
         const contract = new MulticallContract(token.address, erc20.interface.fragments as Fragment[]);
         allowanceContractCalls.push(contract[allowanceFuncName](approver, TRANZO_CONTRACT_ADDRESS[CHAIN_ID.Kovan]));
       }
