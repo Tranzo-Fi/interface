@@ -81,7 +81,6 @@ function useUser() {
 
   const login = React.useCallback(
     (instance: AbstractConnector, connectorId: string, onActivate?: Function) => {
-      console.log("hey");
       dispatch({ type: ACTIONS.LOGIN_REQUEST });
       setConnectorId(connectorId);
       activate(instance, () => {}, true)
@@ -92,10 +91,8 @@ function useUser() {
           console.log("connect success");
         })
         .catch((err) => {
-          console.log("heyyy");
           setConnectorId("");
           dispatch({ type: ACTIONS.LOGIN_FAIL });
-
           console.log(err.code);
         });
     },

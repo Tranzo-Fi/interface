@@ -111,8 +111,6 @@ const useTranzo = () => {
 
   const tranzoTransfer = useContractCall(
     async (recipientAddress: string) => {
-      console.log(account);
-      console.log(fromAccount.address);
       if (account !== fromAccount.address) {
         deactivate();
         setConenctTo(fromAccount.address);
@@ -124,7 +122,6 @@ const useTranzo = () => {
         debtTokenTranzoList,
         aTokenTranzoList,
       ]);
-      console.log("tet", receipt);
       if (receipt && receipt.transactionHash) {
         notify({
           title: "Transaction Completed!",

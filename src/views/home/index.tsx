@@ -21,7 +21,6 @@ const Home = (props: Props) => {
     loading,
     actions: { changeStep, buttonFlow },
   } = Flow.useContainer();
-  console.log(loading);
   const {
     state: {
       signer: { to: toAccount },

@@ -41,7 +41,7 @@ const Delegate = (props: Props) => {
     variableDebtTokenBalances,
     variableDebtTokenAllownaces
   );
-  console.log("delegateTokens", delegateTokens);
+  // console.log("delegateTokens", delegateTokens);
   const {
     state: {
       signer: { to: toAccountSigner },

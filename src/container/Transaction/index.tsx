@@ -142,7 +142,7 @@ function useTransaction() {
 
   const executeWithGasLimit = React.useCallback(
     async (contract: ethers.Contract, funcName: string, args: any[]) => {
-      console.log("heree", address);
+      // console.log("heree", address);
       const overrides = { from: address };
       const gasLimitRatio = BigNumber.from(2);
       let gasLimit: BigNumber;
