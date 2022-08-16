@@ -10,6 +10,7 @@ import { Global } from "./container/global";
 import { Connection } from "./container/connection";
 import { Contract } from "./container/contract";
 import { Transaction } from "container/Transaction";
+import TokenFetch from "container/token";
 
 declare global {
   interface Window {
@@ -26,7 +27,16 @@ const Providers = (
       return <Provider {...props}>{providers}</Provider>;
     }, children);
   }
-)(Web3Provider, Global.Provider, Connection.Provider, Contract.Provider, Flow.Provider, User.Provider, Transaction.Provider);
+)(
+  Web3Provider,
+  Global.Provider,
+  Connection.Provider,
+  Contract.Provider,
+  TokenFetch.Provider,
+  Flow.Provider,
+  User.Provider,
+  Transaction.Provider
+);
 
 ReactDOM.render(
   <React.StrictMode>

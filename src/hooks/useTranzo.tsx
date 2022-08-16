@@ -14,6 +14,7 @@ import { Connection } from "container/connection";
 import { Global } from "container/global";
 import { ExternalLink } from "components/ExternalLink";
 import { getEtherscanTxLink } from "utils/link";
+import { decreaseByPercent, increaseByPercent } from "utils/format";
 
 interface aTokenTranzoItem {
   tokenAddress: string;
@@ -66,7 +67,7 @@ const useTranzo = () => {
     .forEach((t) => {
       const token = TOKEN_LIST.find((tk) => tk.symbol === t.symbol);
 
-      if (token) {
+      if (token && t) {
         const item = [];
         item[0] = token?.tokenAddress;
         item[1] = t.address;
@@ -117,6 +118,13 @@ const useTranzo = () => {
         return;
       }
       const contract = tranzo.attach(TRANZO_CONTRACT_ADDRESS[CHAIN_ID.Kovan]);
+      // todo : refactor to handle in line :74
+      console.log(0.0001);
+      // const modifiedATokenBalanceList = aTokenTranzoList.map((t) => {
+      //   t[2] = decreaseByPercent(t[2] as ethers.BigNumber, 0.0001);
+      //   return t;
+      // });
+      // console.log(modifiedATokenBalanceList);
       const receipt = await executeWithGasLimit(contract!.connect(signer), "transferAccount", [
         recipientAddress,
         debtTokenTranzoList,

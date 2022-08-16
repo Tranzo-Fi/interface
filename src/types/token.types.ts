@@ -18,4 +18,6 @@ export type Token = {
 export enum TokenType {
   AToken = "AToken",
   DebtToken = "DebtToken",
+  StableDebtToken = "StableDebtToken",
+  VariableDebtToken = "VariableDebtToken",
 }

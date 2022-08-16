@@ -54,7 +54,7 @@ const Delegate = (props: Props) => {
   const { approveDelegation } = useToken(TokenType.DebtToken, toAccountSigner?.signer || undefined);
   const doDelegateApprove = React.useCallback(
     async (tokenAddress: string, amount: ethers.BigNumber) => {
-      console.log("hey!");
+      // console.log("hey!");
       if (account !== toAccountSigner.address) {
         deactivate();
         notify({
@@ -82,7 +82,7 @@ const Delegate = (props: Props) => {
     ]
   );
   return (
-    <Layout title={"Aprove Delegation"}>
+    <Layout title={"Approve Delegation"}>
       <Box px={3}>
         <Flex
           p={10}

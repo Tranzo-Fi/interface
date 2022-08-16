@@ -1,3 +1,4 @@
+import React from "react";
 import { Connection } from "../connection/index";
 import useNotification from "hooks/useNotification";
 import useApproveDelegationProgress from "hooks/useApproveDelegationProgress";
@@ -5,15 +6,17 @@ import useApproveProgress from "hooks/useApproveProgress";
 import { TokenType } from "../../types/token.types";
 import { aTokenList, stableDebtTokenList, variableDebtTokenList } from "../../constants/tokens";
 import useTokens from "hooks/useTokens";
-import React from "react";
 import { createContainer } from "unstated-next";
 import { Step } from "../../types/app.types";
 import useDelegation from "hooks/useDelegation";
+import TokenFetch from "container/token";
 
 export const Flow = createContainer(useFlow);
 
 function useFlow() {
   const [loading, setLoading] = React.useState(false);
+  // const { state } = TokenFetch.useContainer();
+  // console.log("state", state);
   const [continueApprove, setContinueApprove] = React.useState(false);
   const [continueDelegation, setContinueDelegation] = React.useState(false);
   const { account } = Connection.useContainer();
@@ -49,35 +52,38 @@ function useFlow() {
   }, []);
 
   // todo: hot fix, needs to be changed
-  React.useEffect(() => {
-    if (continueApprove) {
-      // check all the a tokens are approved
-      if (approveProgress !== 1) {
-        notify({
-          title: "Approval Pending",
-          description: "Please approve all the tokens",
-        });
-        return;
-      }
-      changeStep(currentStep + 1);
-    }
-  }, [approveProgress, changeStep, continueApprove, currentStep, notify]);
+  // React.useEffect(() => {
+  //   if (continueApprove) {
+  //     // check all the a tokens are approved
+  //     if (approveProgress !== 1) {
+  //       notify({
+  //         title: "Approval Pending",
+  //         description: "Please approve all the tokens",
+  //       });
+  //       return;
+  //     }
+  //     if (currentStep === Step.FOUR) return;
+  //     changeStep(currentStep + 1);
+  //   }
+  // }, [approveProgress, changeStep, continueApprove, currentStep, notify]);
 
-  // todo: hot fix, needs to be changed
-  React.useEffect(() => {
-    if (continueDelegation) {
-      if (delegationProgress !== 1) {
-        notify({
-          title: "Delegation Pending",
-          description: "Please delegate all the tokens",
-        });
-        return;
-      }
-      changeStep(currentStep + 1);
-    }
-  }, [changeStep, continueDelegation, currentStep, delegationProgress, notify]);
+  // // todo: hot fix, needs to be changed
+  // React.useEffect(() => {
+  //   if (continueDelegation) {
+  //     if (delegationProgress !== 1) {
+  //       notify({
+  //         title: "Delegation Pending",
+  //         description: "Please delegate all the tokens",
+  //       });
+  //       return;
+  //     }
+  //     if (currentStep === Step.FOUR) return;
+  //     changeStep(currentStep + 1);
+  //   }
+  // }, [changeStep, continueDelegation, currentStep, delegationProgress, notify]);
 
   const buttonFlow = (currentStep: Step) => {
+    // console.log("currentStep", currentStep);
     switch (currentStep) {
       case Step.ONE:
         return {
@@ -109,7 +115,16 @@ function useFlow() {
     setLoading(true);
     await fetchAllowance();
     setLoading(false);
-    setContinueApprove(true);
+    // setContinueApprove(true);
+    if (approveProgress !== 1) {
+      notify({
+        title: "Approval Pending",
+        description: "Please approve all the tokens",
+      });
+      return;
+    }
+    if (currentStep === Step.FOUR) return;
+    changeStep(currentStep + 1);
   };
 
   const moveReviewPositions = async () => {
@@ -117,7 +132,17 @@ function useFlow() {
     await fetchStableDebtTokenAllowance();
     await fetchVariableDebtTokenAllownace();
     setLoading(false);
-    setContinueDelegation(true);
+    // setContinueDelegation(true);
+
+    if (delegationProgress !== 1) {
+      notify({
+        title: "Delegation Pending",
+        description: "Please delegate all the tokens",
+      });
+      return;
+    }
+    if (currentStep === Step.FOUR) return;
+    changeStep(currentStep + 1);
   };
 
   return {

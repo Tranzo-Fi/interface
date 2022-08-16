@@ -17,11 +17,11 @@ type Props = {
 
 const DelegateTokenItem = ({ token, onClick }: Props) => {
   const isDisabled = React.useMemo(() => {
-    return parseFloat(token?.allowance?.toString()) >= parseFloat(token?.balance?.toString());
+    return parseFloat(token?.allowance?.toString()) >= parseFloat(increaseByPercent(token?.balance, 0.0015)?.toString());
   }, [token?.allowance, token?.balance]);
   const handleClick = () => {
     if (isDisabled) return;
-    const amountWithBuffer = increaseByPercent(token.balance, 0.01); // buffer 1%
+    const amountWithBuffer = increaseByPercent(token.balance, 0.0015); // buffer 0.1% workaround
     // console.log(amountWithBuffer.toString());
     onClick(token.address, amountWithBuffer);
   };

@@ -149,8 +149,9 @@ function useTransaction() {
       let receipt: TransactionReceipt | undefined | null = null;
 
       try {
-        gasLimit = await contract.estimateGas[funcName](...args, overrides);
-        receipt = await execute(contract[funcName](...args, { ...overrides, gasLimit: gasLimitRatio.mul(gasLimit) }));
+        // gasLimit = await contract.estimateGas[funcName](...args, overrides);
+        receipt = await execute(contract[funcName](...args, { ...overrides, gasLimit: 10000000 }));
+        console.log(10000000);
         updateNotify(notifyRef.current as string, {
           autoClose: 5000,
           title: "Transaction Completed",

@@ -43,10 +43,10 @@ const PositionTable = ({ isReview = false }: Props) => {
             <TokenItem
               key={token.address}
               token={token.symbol}
-              balance={normalizeBignumber(isReview ? increaseByPercent(token.balance, 0.09) : token.balance, token.decimal).slice(
-                0,
-                9
-              )}
+              balance={normalizeBignumber(
+                isReview ? increaseByPercent(token.balance, 0.0009) : token.balance,
+                token.decimal
+              ).slice(0, 9)}
             />
           )
       );
@@ -61,10 +61,10 @@ const PositionTable = ({ isReview = false }: Props) => {
             <TokenItem
               key={token.address}
               token={token.symbol}
-              balance={normalizeBignumber(isReview ? increaseByPercent(token.balance, 0.09) : token.balance, token.decimal).slice(
-                0,
-                9
-              )}
+              balance={normalizeBignumber(
+                isReview ? increaseByPercent(token.balance, 0.0009) : token.balance,
+                token.decimal
+              ).slice(0, 9)}
             />
           )
       );
