@@ -3,12 +3,13 @@ import { Text } from "rebass/styled-components";
 
 type Props = {
   label: string;
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 const MenuItem = ({ label, onClick }: Props) => {
   return (
     <Text
+      onClick={onClick}
       fontFamily={"Roboto Mono"}
       my={10}
       color={"grey"}

@@ -1,5 +1,4 @@
 import Avatar from "boring-avatars";
-import { Global } from "container/global";
 import React from "react";
 import { Box, Flex, Text } from "rebass/styled-components";
 
@@ -31,6 +30,15 @@ const AccountStatus = (props: Props) => {
     if (isMenuOpen) onMenuClose();
   });
 
+  const copyToClipboard = (content: any) => {
+    const el = document.createElement("textarea");
+    el.value = content;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand("copy");
+    document.body.removeChild(el);
+  };
+
   return (
     <Flex flexDirection={"column"}>
       <div ref={menuRef}>
@@ -58,8 +66,20 @@ const AccountStatus = (props: Props) => {
         </Flex>
         <MenuOverlay isOpen={isMenuOpen}>
           <>
-            <MenuItem label="Copy Address" onClick={() => {}} />
-            <MenuItem label="Open In Etherscan" onClick={() => {}} />
+            <MenuItem
+              label="Copy Address"
+              onClick={() => {
+                console.log("clicked");
+                copyToClipboard(address);
+              }}
+            />
+
+            <MenuItem
+              label="Open In Etherscan"
+              onClick={() => {
+                window.open(`https://kovan.etherscan.io/address/${address}`);
+              }}
+            />
             <Text
               mt={3}
               onClick={logout}
