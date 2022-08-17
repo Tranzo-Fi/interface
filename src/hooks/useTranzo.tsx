@@ -1,9 +1,8 @@
 import useNotification from "hooks/useNotification";
 import { useWeb3React } from "@web3-react/core";
-import { truncateAddress } from "utils/address";
 import { CHAIN_ID } from "connector";
 import { TOKEN_LIST } from "../constants/tokens";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "ethers";
 import { aTokenList, stableDebtTokenList, variableDebtTokenList } from "constants/tokens";
 import { TokenType } from "types/token.types";
 import useTokens from "./useTokens";
@@ -14,22 +13,10 @@ import { Connection } from "container/connection";
 import { Global } from "container/global";
 import { ExternalLink } from "components/ExternalLink";
 import { getEtherscanTxLink } from "utils/link";
-import { decreaseByPercent, increaseByPercent } from "utils/format";
-
-interface aTokenTranzoItem {
-  tokenAddress: string;
-  aTokenAddress: string;
-  aTokenBalance: BigNumber;
-}
-
-interface debtTokenTranzoItem {
-  tokenAddress: string;
-  stableDebtTokenBalance: BigNumber;
-  variableDebtTokenBalance: BigNumber;
-}
+import { truncateAddress } from "utils/address";
 
 /**
- * Contract spec 
+ * Contract spec - send array of arrays
  *  struct DebtTokenBalance {
         address tokenAddress;
         uint256 stableDebtTokenBalance;
@@ -49,14 +36,14 @@ const useTranzo = () => {
   const { balances: stableDebtTokenBalances } = useTokens(stableDebtTokenList, TokenType.DebtToken);
   const { balances: variableDebtTokenBalances } = useTokens(variableDebtTokenList, TokenType.DebtToken);
   const { tranzo } = Contract.useContainer();
-  const { deactivate } = useWeb3React();
   const { notify } = useNotification();
-  const { executeWithGasLimit } = Transaction.useContainer();
+  const { executeWithCustomGasLimit } = Transaction.useContainer();
+  const { deactivate } = useWeb3React();
   const {
     state: {
-      signer: { to: toAccount, from: fromAccount },
+      signer: { from: fromAccount },
     },
-    actions: { setConenctTo },
+    actions: { setConenctTo, setTranzoDone },
   } = Global.useContainer();
   const { signer, account } = Connection.useContainer();
   const aTokenTranzoList = [] as any[];
@@ -112,33 +99,33 @@ const useTranzo = () => {
 
   const tranzoTransfer = useContractCall(
     async (recipientAddress: string) => {
-      if (account !== fromAccount.address) {
+      if (account !== fromAccount.address || !account) {
         deactivate();
         setConenctTo(fromAccount.address);
+        notify({
+          title: "Incorrect Account",
+          description: `Please switch to ${truncateAddress(fromAccount.address)}`,
+        });
         return;
       }
       const contract = tranzo.attach(TRANZO_CONTRACT_ADDRESS[CHAIN_ID.Kovan]);
-      // todo : refactor to handle in line :74
-      console.log(0.0001);
-      // const modifiedATokenBalanceList = aTokenTranzoList.map((t) => {
-      //   t[2] = decreaseByPercent(t[2] as ethers.BigNumber, 0.0001);
-      //   return t;
-      // });
-      // console.log(modifiedATokenBalanceList);
-      const receipt = await executeWithGasLimit(contract!.connect(signer), "transferAccount", [
-        recipientAddress,
-        debtTokenTranzoList,
-        aTokenTranzoList,
-      ]);
+      const receipt = await executeWithCustomGasLimit(
+        contract!.connect(signer),
+        "transferAccount",
+        [recipientAddress, debtTokenTranzoList, aTokenTranzoList],
+        BigNumber.from(1000000) // gas limit hardcoded to avoid reverting
+      );
       if (receipt && receipt.transactionHash) {
+        console.log(getEtherscanTxLink(receipt.transactionHash));
         notify({
           title: "Transaction Completed!",
           description: <ExternalLink href={getEtherscanTxLink(receipt.transactionHash)}>View Transaction</ExternalLink>,
         });
+        setTranzoDone(true);
       }
       return receipt;
     },
-    [executeWithGasLimit, signer, tranzo, debtTokenTranzoList, aTokenTranzoList]
+    [executeWithCustomGasLimit, signer, tranzo, debtTokenTranzoList, aTokenTranzoList]
   );
 
   return {

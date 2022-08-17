@@ -1,13 +1,11 @@
-import { aTokenList, stableDebtTokenList, variableDebtTokenList } from "../constants/tokens";
-import useTokens from "hooks/useTokens";
+import React from "react";
 import { Box, Flex, Text } from "rebass/styled-components";
 import Layout from "./primitives/Layout";
 import TokenItem from "./TokenItem";
 import { increaseByPercent, normalizeBignumber } from "utils/format";
-import React from "react";
-import { TokenType } from "types/token.types";
 import { Connection } from "container/connection";
 import WalletConnectButton from "./wallet/WalletConnectButton";
+import TokenFetch from "container/token";
 
 type Props = {
   isReview: boolean;
@@ -15,9 +13,13 @@ type Props = {
 
 const PositionTable = ({ isReview = false }: Props) => {
   const { account } = Connection.useContainer();
-  const { balances: aTokenBalances } = useTokens(aTokenList, TokenType.AToken);
-  const { balances: stableDebtTokenBalances } = useTokens(stableDebtTokenList, TokenType.DebtToken);
-  const { balances: variableDebtTokenBalances } = useTokens(variableDebtTokenList, TokenType.DebtToken);
+  const {
+    state: {
+      aTokenBalance: aTokenBalances,
+      stableDebtTokenBalance: stableDebtTokenBalances,
+      variableDebtTokenBalance: variableDebtTokenBalances,
+    },
+  } = TokenFetch.useContainer();
 
   const aTokenListBalance = React.useMemo(() => {
     return aTokenBalances
@@ -73,7 +75,7 @@ const PositionTable = ({ isReview = false }: Props) => {
   return (
     <>
       <Layout title={isReview ? "Review Position Transfer" : "Your Positions"}>
-        {!account ? (
+        {!account && !isReview ? (
           <Flex flexDirection={"column"} justifyContent={"center"} alignItems={"center"} height={520}>
             <Box
               width={400}
@@ -83,7 +85,7 @@ const PositionTable = ({ isReview = false }: Props) => {
             >
               <Flex
                 padding={10}
-                backgroundColor={"dullDark"}
+                backgroundColor={"#2d2d2f"}
                 height={60}
                 alignItems={"center"}
                 mb={2}

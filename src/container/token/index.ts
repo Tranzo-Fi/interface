@@ -26,7 +26,7 @@ enum ACTIONS {
 const initialState = {
   loading: false,
   aTokenBalance: [] as BalanceTokenType[],
-  aTokenAllownace: [] as AllownaceTokenType[],
+  aTokenAllowanace: [] as AllownaceTokenType[],
   stableDebtTokenBalance: [] as BalanceTokenType[],
   stableDebtTokenAllowance: [] as AllownaceTokenType[],
   variableDebtTokenBalance: [] as BalanceTokenType[],
@@ -90,14 +90,14 @@ function useToken() {
 
   const setVariableDebtTokenBalance = React.useCallback(
     (payload: BalanceTokenType[]) => {
-      dispatch({ type: ACTIONS.SET_STABLE_DEBT_TOKEN_BALANCE, payload });
+      dispatch({ type: ACTIONS.SET_VARIABLE_DEBT_TOKEN_BALANCE, payload });
     },
     [dispatch]
   );
 
   const setVariableDebtTokenAllowance = React.useCallback(
     (payload: AllownaceTokenType[]) => {
-      dispatch({ type: ACTIONS.SET_STABLE_DEBT_TOKEN_ALLOWANCE, payload });
+      dispatch({ type: ACTIONS.SET_VARIABLE_DEBT_TOKEN_ALLOWANCE, payload });
     },
     [dispatch]
   );
@@ -183,8 +183,7 @@ function useToken() {
 
   React.useEffect(() => {
     refresh();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [refresh]);
 
   return {
     state,
@@ -211,7 +210,7 @@ const reducer = (draft: typeof initialState, action: ActionType): any => {
       draft.aTokenBalance = action.payload;
       break;
     case ACTIONS.SET_ATOKEN_ALLOWANCE:
-      draft.aTokenAllownace = action.payload;
+      draft.aTokenAllowanace = action.payload;
       break;
     case ACTIONS.SET_STABLE_DEBT_TOKEN_BALANCE:
       draft.stableDebtTokenBalance = action.payload;

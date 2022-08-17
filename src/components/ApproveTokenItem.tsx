@@ -1,9 +1,11 @@
-import { ethers } from "ethers";
-import { AllownaceTokenType, BalanceTokenType } from "hooks/useTokens";
 import React from "react";
+import { ethers } from "ethers";
 import { Box, Flex } from "rebass/styled-components";
-import { increaseByPercent, normalizeBignumber } from "utils/format";
+
 import TokenItem from "./TokenItem";
+import { AllownaceTokenType, BalanceTokenType } from "hooks/useTokens";
+import { increaseByPercent, normalizeBignumber } from "utils/format";
+
 type Props = {
   balance: BalanceTokenType;
   allowance: AllownaceTokenType;
@@ -11,10 +13,10 @@ type Props = {
 };
 
 const ApproveTokenItem = ({ balance, allowance, onClick }: Props) => {
-  // console.log("Balance", balance?.symbol, balance?.balance.toString());
-  // console.log("Allowed", allowance?.symbol, allowance?.allowance.toString());
+  console.log(allowance?.allowance?.toString());
+  console.log(balance?.balance?.toString());
   const isDisabled = React.useMemo(() => {
-    return parseFloat(allowance?.allowance.toString()) >= parseFloat(increaseByPercent(balance?.balance, 0.0001)?.toString());
+    return parseFloat(allowance?.allowance.toString()) >= parseFloat(balance?.balance?.toString());
   }, [allowance?.allowance, balance?.balance]);
   const handleClick = () => {
     if (isDisabled) return;

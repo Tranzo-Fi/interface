@@ -28,7 +28,7 @@ const BasicModal = ({ heading, show, height = 400, width = 400, children, close 
         <>
           <Box
             onClick={close}
-            backgroundColor={"fadedDark"}
+            backgroundColor={"#1a1a1b"}
             height={"100vh"}
             width={"100%"}
             opacity={0.9}
@@ -42,7 +42,7 @@ const BasicModal = ({ heading, show, height = 400, width = 400, children, close 
             width={width}
             height={height}
             padding={20}
-            backgroundColor={"#1d1d30"}
+            backgroundColor={"fadedDark"}
             sx={{
               border: `1px solid #262638`,
               borderRadius: 10,
@@ -58,8 +58,8 @@ const BasicModal = ({ heading, show, height = 400, width = 400, children, close 
                 sx={{
                   borderRadius: "10px",
                   border: "2px solid",
-                  borderColor: "#59547b",
-                  backgroundColor: "infoFlash",
+                  borderColor: "#4c6b65",
+                  backgroundColor: "#364744",
                 }}
                 display={"flex"}
                 marginX={0.5}

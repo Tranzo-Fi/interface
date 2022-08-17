@@ -55,11 +55,11 @@ const Header = (props: Props) => {
                 mt={1}
                 sx={{
                   borderRadius: 8,
-                  border: `1px solid #3d3d9c`,
+                  border: `1px solid #54b7ab`,
                   transition: "0.3s",
                   "&:hover": {
                     cursor: "pointer",
-                    background: "#242438",
+                    background: "#54b7ab",
                   },
                 }}
                 backgroundColor={"flash"}

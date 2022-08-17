@@ -5,6 +5,7 @@ import { stableDebtTokenList, variableDebtTokenList } from "constants/tokens";
 import { Connection } from "container/connection";
 import { TRANZO_CONTRACT_ADDRESS } from "container/contract";
 import { Global } from "container/global";
+import TokenFetch from "container/token";
 import { ethers } from "ethers";
 import useApproveDelegationProgress from "hooks/useApproveDelegationProgress";
 import useDelegation from "hooks/useDelegation";
@@ -24,24 +25,33 @@ type Props = {};
 const Delegate = (props: Props) => {
   const { notify } = useNotiifcation();
   const {
-    balances: stableDebtTokenBalances,
-    allowances: stableDebtTokenAllowances,
-    actions: { fetchAllowance: fetchStableDebtTokenAllowance },
-  } = useTokens(stableDebtTokenList, TokenType.DebtToken);
+    state: {
+      stableDebtTokenBalance: stableDebtTokenBalances,
+      stableDebtTokenAllowance: stableDebtTokenAllowances,
+      variableDebtTokenBalance: variableDebtTokenBalances,
+      variableDebtTokenAllowance: variableDebtTokenAllowances,
+    },
+    actions: { fetchAllowance },
+  } = TokenFetch.useContainer();
+  // const {
+  //   balances: stableDebtTokenBalances,
+  //   allowances: stableDebtTokenAllowances,
+  //   actions: { fetchAllowance: fetchStableDebtTokenAllowance },
+  // } = useTokens(stableDebtTokenList, TokenType.DebtToken);
   // console.log("stableDebtTokenAllowances", stableDebtTokenAllowances.find((t) => t.symbol === "DAI")?.allowance.toString());
-  const {
-    balances: variableDebtTokenBalances,
-    allowances: variableDebtTokenAllownaces,
-    actions: { fetchAllowance: fetchVariableDebtTokenAllowance },
-  } = useTokens(variableDebtTokenList, TokenType.DebtToken);
+  // const {
+  //   balances: variableDebtTokenBalances,
+  //   allowances: variableDebtTokenAllownaces,
+  //   actions: { fetchAllowance: fetchVariableDebtTokenAllowance },
+  // } = useTokens(variableDebtTokenList, TokenType.DebtToken);
 
   const { delegateTokens } = useDelegation(
     stableDebtTokenBalances,
     stableDebtTokenAllowances,
     variableDebtTokenBalances,
-    variableDebtTokenAllownaces
+    variableDebtTokenAllowances
   );
-  // console.log("delegateTokens", delegateTokens);
+
   const {
     state: {
       signer: { to: toAccountSigner },
@@ -54,7 +64,6 @@ const Delegate = (props: Props) => {
   const { approveDelegation } = useToken(TokenType.DebtToken, toAccountSigner?.signer || undefined);
   const doDelegateApprove = React.useCallback(
     async (tokenAddress: string, amount: ethers.BigNumber) => {
-      // console.log("hey!");
       if (account !== toAccountSigner.address) {
         deactivate();
         notify({
@@ -66,20 +75,11 @@ const Delegate = (props: Props) => {
       }
       const receipt: TransactionReceipt = await approveDelegation(tokenAddress, TRANZO_CONTRACT_ADDRESS[CHAIN_ID.Kovan], amount);
       if (receipt?.transactionHash) {
-        fetchStableDebtTokenAllowance();
-        fetchVariableDebtTokenAllowance();
+        await fetchAllowance(stableDebtTokenList, TokenType.StableDebtToken);
+        await fetchAllowance(variableDebtTokenList, TokenType.VariableDebtToken);
       }
     },
-    [
-      account,
-      approveDelegation,
-      deactivate,
-      fetchStableDebtTokenAllowance,
-      fetchVariableDebtTokenAllowance,
-      notify,
-      setConenctTo,
-      toAccountSigner.address,
-    ]
+    [account, approveDelegation, deactivate, fetchAllowance, notify, setConenctTo, toAccountSigner.address]
   );
   return (
     <Layout title={"Approve Delegation"}>

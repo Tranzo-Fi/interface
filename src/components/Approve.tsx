@@ -4,10 +4,11 @@ import { aTokenList } from "constants/tokens";
 import { Connection } from "container/connection";
 import { TRANZO_CONTRACT_ADDRESS } from "container/contract";
 import { Global } from "container/global";
-import { ContractTransaction, ethers } from "ethers";
+import TokenFetch from "container/token";
+import { ethers } from "ethers";
 import useApproveProgress from "hooks/useApproveProgress";
 import useToken from "hooks/useToken";
-import useTokens, { AllownaceTokenType } from "hooks/useTokens";
+import { AllownaceTokenType } from "hooks/useTokens";
 import React from "react";
 import { Box, Flex } from "rebass/styled-components";
 import { TokenType } from "../types/token.types";
@@ -39,10 +40,9 @@ const Approve = (props: Props) => {
   } = Global.useContainer();
 
   const {
-    balances: aTokenBalances,
-    allowances: aTokenAllowances,
+    state: { aTokenBalance: aTokenBalances, aTokenAllowanace: aTokenAllowances },
     actions: { fetchAllowance },
-  } = useTokens(aTokenList, TokenType.AToken);
+  } = TokenFetch.useContainer();
   const progress = useApproveProgress(aTokenAllowances, aTokenBalances);
   const { approve } = useToken(TokenType.AToken, fromSigner?.signer || undefined); // fromSigner is signer of wallet from where positions to be moved from
 
@@ -50,7 +50,7 @@ const Approve = (props: Props) => {
     async (tokenAddress: string, amount: ethers.BigNumber) => {
       const receipt: TransactionReceipt = await approve(tokenAddress, TRANZO_CONTRACT_ADDRESS[CHAIN_ID.Kovan], amount);
       if (receipt && receipt?.transactionHash) {
-        fetchAllowance(); // refresh allownaces
+        fetchAllowance(aTokenList, TokenType.AToken); // refresh allownaces
       }
     },
     [approve, fetchAllowance]

@@ -48,35 +48,10 @@ const AccountStatus = (props: Props) => {
             },
           }}
         >
-          <Avatar size={25} name={address} variant="sunset" colors={["#2623dd", "#6462de", "#939398", "#4a4a5c", "#5757ae"]} />
+          <Avatar size={25} name={address} variant="sunset" colors={["#8caba7", "#4fa196", "#939398", "#4a4a5c", "#51ead5"]} />
           <Text alignSelf={"center"} ml={2}>
             {truncateAddress(address)}
           </Text>
-          {/* <Box
-            width={20}
-            mx={2}
-            mt={0.5}
-            display={"grid"}
-            alignContent={"center"}
-            justifyContent={"center"}
-            height={20}
-            sx={{
-              borderRadius: "100%",
-            }}
-            bg={"grey"}
-          >
-            <i className="fas fa-arrow-right grey small"></i>
-          </Box>
-          <Avatar
-            size={25}
-            name={toAccount.address}
-            variant="sunset"
-            colors={["#2623dd", "#6462de", "#939398", "#4a4a5c", "#5757ae"]}
-          />
-          <Text alignSelf={"center"} ml={2}>
-            {truncateAddress(toAccount.address)}
-          </Text> */}
-
           <Box alignSelf={"center"} ml={2}>
             <ButtonArrow isOpen={isMenuOpen} />
           </Box>

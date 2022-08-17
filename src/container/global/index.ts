@@ -8,6 +8,7 @@ enum ACTIONS {
   SET_FROM_SIGNER = "SET_FROM_SIGNER",
   CLEAR_SIGNERS = "CLEAR_SIGNERS",
   SET_CONNECT_TO = "SET_CONNECT_TO",
+  SET_TRANZO_DONE = "SET_TRANZO_DONE",
 }
 
 const initialSignerState = {
@@ -27,6 +28,7 @@ const initialState = {
   },
   signer: initialSignerState,
   connectTo: "",
+  tranzoDone: false,
 };
 
 type ActionType =
@@ -34,7 +36,8 @@ type ActionType =
   | { type: ACTIONS.SET_TO_SIGNER; payload: { signer: any; address: string } }
   | { type: ACTIONS.SET_FROM_SIGNER; payload: { signer: any; address: string } }
   | { type: ACTIONS.CLEAR_SIGNERS }
-  | { type: ACTIONS.SET_CONNECT_TO; payload: string };
+  | { type: ACTIONS.SET_CONNECT_TO; payload: string }
+  | { type: ACTIONS.SET_TRANZO_DONE; payload: boolean };
 
 export const Global = createContainer(useGlobal);
 
@@ -73,6 +76,13 @@ function useGlobal() {
     dispatch({ type: ACTIONS.CLEAR_SIGNERS });
   }, [dispatch]);
 
+  const setTranzoDone = React.useCallback(
+    (payload: boolean) => {
+      dispatch({ type: ACTIONS.SET_TRANZO_DONE, payload });
+    },
+    [dispatch]
+  );
+
   return {
     state,
     actions: {
@@ -81,6 +91,7 @@ function useGlobal() {
       setFromSigner,
       clearSigners,
       setConenctTo,
+      setTranzoDone,
     },
   };
 }
@@ -103,6 +114,9 @@ const reducer = (draft: typeof initialState, action: ActionType): any => {
       break;
     case ACTIONS.SET_CONNECT_TO:
       draft.connectTo = action.payload;
+      break;
+    case ACTIONS.SET_TRANZO_DONE:
+      draft.tranzoDone = action.payload;
       break;
     default:
       return draft;

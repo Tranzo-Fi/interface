@@ -15,7 +15,7 @@ const AppButton = ({ label, style, rightIcon, onPress, loading = false }: Props)
       onClick={onPress}
       sx={{
         ...style,
-        border: `1.5px solid #6462de`,
+        border: `1.5px solid #5deddc`,
         ":hover": {
           backgroundColor: "fadedFlash",
           cursor: "pointer",

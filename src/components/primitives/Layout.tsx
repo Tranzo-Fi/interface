@@ -38,8 +38,8 @@ const Layout = ({ title, children }: Props) => {
                 size={25}
                 name={fromAccount.address}
                 variant="sunset"
-                colors={["#2623dd", "#6462de", "#939398", "#4a4a5c", "#5757ae"]}
-              />
+                colors={["#8caba7", "#4fa196", "#939398", "#4a4a5c", "#51ead5"]}
+              />{" "}
               <Text alignSelf={"center"} color={"flash"} fontFamily={"Roboto Mono"} ml={2}>
                 {truncateAddress(fromAccount.address)}
               </Text>
@@ -63,7 +63,7 @@ const Layout = ({ title, children }: Props) => {
                 size={25}
                 name={toAccount.address}
                 variant="sunset"
-                colors={["#2623dd", "#6462de", "#939398", "#4a4a5c", "#5757ae"]}
+                colors={["#8caba7", "#4fa196", "#939398", "#4a4a5c", "#51ead5"]}
               />
               <Text color={"flash"} fontFamily={"Roboto Mono"} alignSelf={"center"} ml={2}>
                 {truncateAddress(toAccount.address)}

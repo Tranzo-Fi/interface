@@ -17,7 +17,7 @@ type Props = {
 
 const DelegateTokenItem = ({ token, onClick }: Props) => {
   const isDisabled = React.useMemo(() => {
-    return parseFloat(token?.allowance?.toString()) >= parseFloat(increaseByPercent(token?.balance, 0.0015)?.toString());
+    return parseFloat(token?.allowance?.toString()) >= parseFloat(token?.balance?.toString());
   }, [token?.allowance, token?.balance]);
   const handleClick = () => {
     if (isDisabled) return;

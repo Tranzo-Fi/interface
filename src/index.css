@@ -2,10 +2,10 @@
   color: white;
 }
 :root {
-  --toastify-color-progress-light: #514eec !important;
+  --toastify-color-progress-light: #3dd7c5 !important;
 }
 .flash {
-  color: #514eec;
+  color: #31d6c3;
   font-size: 23px;
 }
 
@@ -32,10 +32,10 @@
 }
 
 .app-notification {
-  background-color: #202033 !important;
-  color: #514eec !important;
+  background-color: #1a201f !important;
+  color: #17ceb9 !important;
 }
 
 .Toastify__close-button {
-  color: #514eec !important;
+  color: #17ceb9 !important;
 }

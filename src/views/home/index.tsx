@@ -23,18 +23,30 @@ const Home = (props: Props) => {
   } = Flow.useContainer();
   const {
     state: {
+      tranzoDone,
       signer: { to: toAccount },
     },
   } = Global.useContainer();
 
   const handlePress = React.useCallback(() => {
+    if (loading || tranzoDone) return;
     if (currentStep === Step.FOUR) {
       tranzoTransfer(toAccount.address);
       return;
     }
 
     buttonFlow(currentStep).action();
-  }, [buttonFlow, currentStep, toAccount.address, tranzoTransfer]);
+  }, [buttonFlow, currentStep, loading, toAccount.address, tranzoDone, tranzoTransfer]);
+
+  const getAppButtonText = React.useCallback(() => {
+    if (currentStep === Step.FOUR) {
+      return "Transfer Positions";
+    } else if (tranzoDone) {
+      return "Transfer Completed";
+    } else {
+      return buttonFlow(currentStep).buttonLabel;
+    }
+  }, [buttonFlow, currentStep, tranzoDone]);
   return (
     <>
       <Header />
@@ -63,7 +75,7 @@ const Home = (props: Props) => {
             height: "70px",
           }}
           rightIcon={<i className="fas fa-arrow-right white"></i>}
-          label={currentStep === Step.FOUR ? "Transfer Positions" : buttonFlow(currentStep).buttonLabel}
+          label={getAppButtonText()}
           onPress={handlePress}
         />
       </Flex>

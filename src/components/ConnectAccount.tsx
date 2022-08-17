@@ -15,7 +15,7 @@ const ConnectAccount = ({ from, to }: Props) => {
           size={80}
           name={accountAddress}
           variant="sunset"
-          colors={["#2623dd", "#6462de", "#939398", "#4a4a5c", "#5757ae"]}
+          colors={["#8caba7", "#4fa196", "#939398", "#4a4a5c", "#51ead5"]}
         />
         <Box
           bg={"flash"}
@@ -29,7 +29,7 @@ const ConnectAccount = ({ from, to }: Props) => {
           px={1}
           mt={3}
           sx={{
-            border: "2px solid #6b68f2",
+            border: "2px solid #76e3d5",
             borderRadius: "10px",
           }}
         >

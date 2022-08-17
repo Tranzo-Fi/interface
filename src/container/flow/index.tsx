@@ -1,46 +1,36 @@
 import React from "react";
-import { Connection } from "../connection/index";
-import useNotification from "hooks/useNotification";
-import useApproveDelegationProgress from "hooks/useApproveDelegationProgress";
-import useApproveProgress from "hooks/useApproveProgress";
-import { TokenType } from "../../types/token.types";
-import { aTokenList, stableDebtTokenList, variableDebtTokenList } from "../../constants/tokens";
-import useTokens from "hooks/useTokens";
-import { createContainer } from "unstated-next";
+
+import TokenFetch from "container/token";
 import { Step } from "../../types/app.types";
 import useDelegation from "hooks/useDelegation";
-import TokenFetch from "container/token";
+import { createContainer } from "unstated-next";
+import { Connection } from "../connection/index";
+import useNotification from "hooks/useNotification";
+import useApproveProgress from "hooks/useApproveProgress";
+import useApproveDelegationProgress from "hooks/useApproveDelegationProgress";
 
 export const Flow = createContainer(useFlow);
 
 function useFlow() {
   const [loading, setLoading] = React.useState(false);
-  // const { state } = TokenFetch.useContainer();
-  // console.log("state", state);
-  const [continueApprove, setContinueApprove] = React.useState(false);
-  const [continueDelegation, setContinueDelegation] = React.useState(false);
+  const {
+    state: {
+      loading: tokenFetchLoading,
+      aTokenBalance: aTokenBalances,
+      aTokenAllowanace: aTokenAllowances,
+      stableDebtTokenAllowance: stableDebtTokenAllowances,
+      stableDebtTokenBalance: stableDebtTokenBalances,
+      variableDebtTokenBalance: variableDebtTokenBalances,
+      variableDebtTokenAllowance: variableDebtTokenAllowanaces,
+    },
+  } = TokenFetch.useContainer();
   const { account } = Connection.useContainer();
-  const {
-    balances: aTokenBalances,
-    allowances: aTokenAllowances,
-    actions: { fetchAllowance },
-  } = useTokens(aTokenList, TokenType.AToken);
-  const {
-    balances: stableDebtTokenBalances,
-    allowances: stableDebtTokenAllowances,
-    actions: { fetchAllowance: fetchStableDebtTokenAllowance },
-  } = useTokens(stableDebtTokenList, TokenType.DebtToken);
-  const {
-    balances: variableDebtTokenBalances,
-    allowances: variableDebtTokenAllownaces,
-    actions: { fetchAllowance: fetchVariableDebtTokenAllownace },
-  } = useTokens(variableDebtTokenList, TokenType.DebtToken);
 
   const { delegateTokens } = useDelegation(
     stableDebtTokenBalances,
     stableDebtTokenAllowances,
     variableDebtTokenBalances,
-    variableDebtTokenAllownaces
+    variableDebtTokenAllowanaces
   );
   const approveProgress = useApproveProgress(aTokenAllowances, aTokenBalances);
   const delegationProgress = useApproveDelegationProgress(delegateTokens);
@@ -51,36 +41,9 @@ function useFlow() {
     setCurrentStep(step);
   }, []);
 
-  // todo: hot fix, needs to be changed
-  // React.useEffect(() => {
-  //   if (continueApprove) {
-  //     // check all the a tokens are approved
-  //     if (approveProgress !== 1) {
-  //       notify({
-  //         title: "Approval Pending",
-  //         description: "Please approve all the tokens",
-  //       });
-  //       return;
-  //     }
-  //     if (currentStep === Step.FOUR) return;
-  //     changeStep(currentStep + 1);
-  //   }
-  // }, [approveProgress, changeStep, continueApprove, currentStep, notify]);
-
-  // // todo: hot fix, needs to be changed
-  // React.useEffect(() => {
-  //   if (continueDelegation) {
-  //     if (delegationProgress !== 1) {
-  //       notify({
-  //         title: "Delegation Pending",
-  //         description: "Please delegate all the tokens",
-  //       });
-  //       return;
-  //     }
-  //     if (currentStep === Step.FOUR) return;
-  //     changeStep(currentStep + 1);
-  //   }
-  // }, [changeStep, continueDelegation, currentStep, delegationProgress, notify]);
+  React.useEffect(() => {
+    setLoading(tokenFetchLoading);
+  }, [tokenFetchLoading]);
 
   const buttonFlow = (currentStep: Step) => {
     // console.log("currentStep", currentStep);
@@ -112,10 +75,6 @@ function useFlow() {
   };
 
   const moveDelegationStep = async () => {
-    setLoading(true);
-    await fetchAllowance();
-    setLoading(false);
-    // setContinueApprove(true);
     if (approveProgress !== 1) {
       notify({
         title: "Approval Pending",
@@ -128,12 +87,6 @@ function useFlow() {
   };
 
   const moveReviewPositions = async () => {
-    setLoading(true);
-    await fetchStableDebtTokenAllowance();
-    await fetchVariableDebtTokenAllownace();
-    setLoading(false);
-    // setContinueDelegation(true);
-
     if (delegationProgress !== 1) {
       notify({
         title: "Delegation Pending",

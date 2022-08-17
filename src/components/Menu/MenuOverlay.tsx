@@ -11,10 +11,10 @@ const Container = styled.div<{
           margin-top: 10px;
           top: 64px;
           width: fit-content;
-          background-color: #202033;
+          background-color: #212124;
           border-radius: 10px;
           height: auto;
-          border: 1px solid #262638;
+          border: 1px solid #2e2c2c;
           width: 250px;
           padding: 10px;
         `

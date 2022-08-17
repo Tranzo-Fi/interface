@@ -118,6 +118,7 @@ function useTransaction() {
   const execute = React.useCallback(
     async (txAction: Promise<ContractTransaction | string>) => {
       let receipt: TransactionReceipt | null = null;
+      console.log(txAction);
       const { tx, isRejected } = await userConfirmTx(txAction);
       if (isRejected) {
         return;
@@ -142,16 +143,36 @@ function useTransaction() {
 
   const executeWithGasLimit = React.useCallback(
     async (contract: ethers.Contract, funcName: string, args: any[]) => {
-      // console.log("heree", address);
       const overrides = { from: address };
       const gasLimitRatio = BigNumber.from(2);
       let gasLimit: BigNumber;
       let receipt: TransactionReceipt | undefined | null = null;
 
       try {
-        // gasLimit = await contract.estimateGas[funcName](...args, overrides);
-        receipt = await execute(contract[funcName](...args, { ...overrides, gasLimit: 10000000 }));
-        console.log(10000000);
+        gasLimit = await contract.estimateGas[funcName](...args, overrides);
+        receipt = await execute(contract[funcName](...args, { ...overrides, gasLimit: gasLimitRatio.mul(gasLimit) }));
+        updateNotify(notifyRef.current as string, {
+          autoClose: 5000,
+          title: "Transaction Completed",
+          description: <ExternalLink href={getEtherscanTxLink(receipt?.transactionHash)}>View Transaction</ExternalLink>,
+        });
+      } catch (err) {
+        console.log("executeWithGasLimit - error", err);
+        setError(err);
+      }
+
+      return receipt;
+    },
+    [address, execute, updateNotify]
+  );
+
+  const executeWithCustomGasLimit = React.useCallback(
+    async (contract: ethers.Contract, funcName: string, args: any[], gasLimit: BigNumber) => {
+      const overrides = { from: address };
+      let receipt: TransactionReceipt | undefined | null = null;
+
+      try {
+        receipt = await execute(contract[funcName](...args, { ...overrides, gasLimit }));
         updateNotify(notifyRef.current as string, {
           autoClose: 5000,
           title: "Transaction Completed",
@@ -172,5 +193,6 @@ function useTransaction() {
     isLoading,
     execute,
     executeWithGasLimit,
+    executeWithCustomGasLimit,
   };
 }

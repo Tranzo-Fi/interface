@@ -14,7 +14,7 @@ const TokenItem = ({ token, balance }: Props) => {
         height={38}
         sx={{
           border: `3px solid`,
-          borderColor: "#514EEC",
+          borderColor: "#17CEB9",
           borderRadius: "100%",
           opacity: 0.9,
         }}
