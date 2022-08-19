@@ -101,7 +101,14 @@ const Delegate = (props: Props) => {
         <Box minHeight={"55vh"}>
           <Flex flexWrap={"wrap"}>
             {(delegateTokens || []).map((t: TokenWithAllowanceAndBalanceType) => {
-              return <DelegateTokenItem key={t?.address} onClick={doDelegateApprove} token={t} />;
+              return (
+                <DelegateTokenItem
+                  key={t?.address}
+                  variableDebtTokenBalance={variableDebtTokenBalances}
+                  onClick={doDelegateApprove}
+                  token={t}
+                />
+              );
             })}
           </Flex>
         </Box>

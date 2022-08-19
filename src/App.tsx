@@ -8,6 +8,7 @@ import WalletModal from "./components/wallet/WalletModal";
 import GlobalStyle from "./utils/globalStyle";
 import { theme } from "./utils/theme";
 import WalletConnectModal from "components/wallet/WalletConnectModal";
+import CompletedModal from "components/CompletedModal";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <ToastContainer />
         <WalletConnectModal />
+        <CompletedModal />
         <WalletModal />
         <GlobalStyle />
         <BrowserRouter>

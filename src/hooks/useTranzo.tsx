@@ -121,7 +121,7 @@ const useTranzo = () => {
           title: "Transaction Completed!",
           description: <ExternalLink href={getEtherscanTxLink(receipt.transactionHash)}>View Transaction</ExternalLink>,
         });
-        setTranzoDone(true);
+        setTranzoDone(receipt?.transactionHash);
       }
       return receipt;
     },

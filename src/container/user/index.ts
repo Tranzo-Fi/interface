@@ -55,7 +55,7 @@ function useUser() {
   } = Flow.useContainer();
 
   const {
-    actions: { clearSigners, toggleWalletModal, setConenctTo },
+    actions: { clearSigners, toggleWalletModal, setConenctTo, setTranzoDone },
   } = Global.useContainer();
 
   usePostLogout(() => {
@@ -103,8 +103,9 @@ function useUser() {
   const logout = React.useCallback(() => {
     deactivate();
     changeStep(Step.ONE);
+    setTranzoDone("");
     clearSigners();
-  }, [changeStep, clearSigners, deactivate]);
+  }, [changeStep, clearSigners, deactivate, setTranzoDone]);
 
   const deactivateWallet = React.useCallback(() => {
     deactivate();

@@ -28,7 +28,7 @@ const initialState = {
   },
   signer: initialSignerState,
   connectTo: "",
-  tranzoDone: false,
+  tranzoDone: "dd",
 };
 
 type ActionType =
@@ -37,7 +37,7 @@ type ActionType =
   | { type: ACTIONS.SET_FROM_SIGNER; payload: { signer: any; address: string } }
   | { type: ACTIONS.CLEAR_SIGNERS }
   | { type: ACTIONS.SET_CONNECT_TO; payload: string }
-  | { type: ACTIONS.SET_TRANZO_DONE; payload: boolean };
+  | { type: ACTIONS.SET_TRANZO_DONE; payload: string };
 
 export const Global = createContainer(useGlobal);
 
@@ -77,7 +77,7 @@ function useGlobal() {
   }, [dispatch]);
 
   const setTranzoDone = React.useCallback(
-    (payload: boolean) => {
+    (payload: string) => {
       dispatch({ type: ACTIONS.SET_TRANZO_DONE, payload });
     },
     [dispatch]
