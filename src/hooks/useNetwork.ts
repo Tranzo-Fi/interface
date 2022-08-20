@@ -1,6 +1,10 @@
+import { User } from "container/user";
 import { providers } from "ethers";
 
 const useNetwork = () => {
+  const {
+    actions: { logout },
+  } = User.useContainer();
   const switchNetwork = async (provider: providers.Web3Provider, chainId: number) => {
     const hexChainId = "0x" + chainId.toString(16);
     console.log(provider);
@@ -29,6 +33,7 @@ const useNetwork = () => {
             method: "wallet_addEthereumChain",
             params: [params],
           });
+          logout();
         } catch (addError) {
           // handle "add" error
           console.error("Add network error"); // eslint-disable-line
