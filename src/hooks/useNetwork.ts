@@ -16,15 +16,15 @@ const useNetwork = () => {
       });
     } catch (error) {
       let params = {
-        chainId: "0x42",
-        chainName: "Ethereum Testnet Kovan",
+        chainId: "0x137",
+        chainName: "Polygon Mainnet",
         nativeCurrency: {
-          name: "Kovan Ether",
-          symbol: "ETH",
+          name: "Polygon Matic",
+          symbol: "MATIC",
           decimals: 18,
         },
-        rpcUrls: ["https://kovan.infura.io/v3/ef6468f72f524d5ea0be6b57dd803d35"],
-        blockExplorerUrls: ["https://kovan.etherscan.io"],
+        rpcUrls: ["https://polygon-mainnet.infura.io/v3/ef6468f72f524d5ea0be6b57dd803d35"],
+        blockExplorerUrls: ["https://polygonscan.com"],
       };
 
       if (params) {

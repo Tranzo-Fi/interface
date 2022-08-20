@@ -70,7 +70,7 @@ function useUser() {
       if (isWrongNetwork) {
         notify({
           title: "Wrong Network",
-          description: "Please use Kovan network", // todo: make this from a single source
+          description: "Please use Polygon network", // todo: make this from a single source
         });
         console.log("---connected---");
         toggleWalletModal(false);

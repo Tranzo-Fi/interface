@@ -6,7 +6,7 @@ import { ERC20__factory, DebtToken__factory, Tranzo__factory } from "../../types
 import { constants } from "ethers";
 
 export const TRANZO_CONTRACT_ADDRESS = {
-  [CHAIN_ID.Kovan]: "0xB12822917909ce07712Bb4602bb46dF0353e2A88",
+  [CHAIN_ID.Kovan]: "0x56a5c81c0eb2cb128Ea95B46EEFec1d46Bc9e3F9",
 };
 
 export const Contract = createContainer(useContract);
