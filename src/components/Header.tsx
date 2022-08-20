@@ -48,7 +48,7 @@ const Header = (props: Props) => {
           <Flex>
             {library && (
               <Box
-                onClick={() => switchNetwork(library, 42)}
+                onClick={() => switchNetwork(library, 137)}
                 p={2}
                 fontSize={12}
                 height={40}
@@ -68,7 +68,7 @@ const Header = (props: Props) => {
                 alignContent={"center"}
                 mr={2}
               >
-                {chainId !== CHAIN_ID.Kovan ? "Switch to Kovan" : "Kovan Network"}
+                {chainId !== CHAIN_ID.Kovan ? "Switch to Polygon" : "Polygon Mainnet"}
               </Box>
             )}
             {address ? <AccountStatus /> : <WalletConnectButton />}
