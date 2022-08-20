@@ -28,7 +28,7 @@ const initialState = {
   },
   signer: initialSignerState,
   connectTo: "",
-  tranzoDone: "dd",
+  tranzoDone: "",
 };
 
 type ActionType =
