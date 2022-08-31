@@ -13,8 +13,8 @@ type Props = {
 };
 
 const ApproveTokenItem = ({ balance, allowance, onClick }: Props) => {
-  console.log(allowance?.allowance?.toString());
-  console.log(balance?.balance?.toString());
+  // console.log(allowance?.allowance?.toString());
+  // console.log(balance?.balance?.toString());
   const isDisabled = React.useMemo(() => {
     return parseFloat(allowance?.allowance.toString()) >= parseFloat(balance?.balance?.toString());
   }, [allowance?.allowance, balance?.balance]);

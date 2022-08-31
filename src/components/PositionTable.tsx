@@ -72,7 +72,7 @@ const PositionTable = ({ isReview = false }: Props) => {
           )
       );
   }, [isReview, variableDebtTokenBalances]);
-  console.log(aTokenBalances);
+  // console.log(aTokenBalances);
   return (
     <>
       <Layout title={isReview ? "Review Position Transfer" : "Your Positions"}>

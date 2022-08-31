@@ -116,7 +116,7 @@ const useTranzo = () => {
         BigNumber.from(4000000) // gas limit hardcoded to avoid reverting
       );
       if (receipt && receipt.transactionHash) {
-        console.log(getEtherscanTxLink(receipt.transactionHash));
+        // console.log(getEtherscanTxLink(receipt.transactionHash));
         notify({
           title: "Transaction Completed!",
           description: <ExternalLink href={getEtherscanTxLink(receipt.transactionHash)}>View Transaction</ExternalLink>,

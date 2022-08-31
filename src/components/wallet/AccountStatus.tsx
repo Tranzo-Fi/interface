@@ -69,7 +69,7 @@ const AccountStatus = (props: Props) => {
             <MenuItem
               label="Copy Address"
               onClick={() => {
-                console.log("clicked");
+                // console.log("clicked");
                 copyToClipboard(address);
               }}
             />

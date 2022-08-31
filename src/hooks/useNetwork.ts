@@ -5,10 +5,10 @@ const useNetwork = () => {
   const {
     actions: { logout },
   } = User.useContainer();
-  console.log(ethers.BigNumber.from(137).toHexString());
+  // console.log(ethers.BigNumber.from(137).toHexString());
   const switchNetwork = async (provider: providers.Web3Provider, chainId: number) => {
     const hexChainId = "0x" + chainId.toString(16);
-    console.log(provider);
+    // console.log(provider);
     if (!provider || !provider.provider || !provider.provider.request) return;
     try {
       await provider.provider.request({

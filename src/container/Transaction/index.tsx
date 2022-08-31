@@ -118,7 +118,7 @@ function useTransaction() {
   const execute = React.useCallback(
     async (txAction: Promise<ContractTransaction | string>) => {
       let receipt: TransactionReceipt | null = null;
-      console.log(txAction);
+      // console.log(txAction);
       const { tx, isRejected } = await userConfirmTx(txAction);
       if (isRejected) {
         return;

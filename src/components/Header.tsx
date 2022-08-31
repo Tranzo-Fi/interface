@@ -17,7 +17,6 @@ const Header = (props: Props) => {
   const { chainId } = Connection.useContainer();
   const { library } = useWeb3React();
   const { switchNetwork } = useNetwork();
-  console.log(chainId);
   return (
     <>
       <Flex mx={30} justifyContent={"space-between"} py={15}>
