@@ -113,7 +113,7 @@ const useTranzo = () => {
         contract!.connect(signer),
         "transferAccount",
         [recipientAddress, debtTokenTranzoList, aTokenTranzoList],
-        BigNumber.from(1000000) // gas limit hardcoded to avoid reverting
+        BigNumber.from(4000000) // gas limit hardcoded to avoid reverting
       );
       if (receipt && receipt.transactionHash) {
         console.log(getEtherscanTxLink(receipt.transactionHash));
