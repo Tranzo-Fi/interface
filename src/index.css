@@ -16,6 +16,10 @@
   font-size: 10px;
 }
 
+.large {
+  font-size: 4em;
+}
+
 .grey {
   color: rgb(103, 103, 103);
 }

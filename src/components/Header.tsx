@@ -45,7 +45,15 @@ const Header = (props: Props) => {
           </Text>
         </Flex>
 
-        <Box color={"flash"} fontFamily={"primary"}>
+        <Box
+          sx={{
+            "@media screen and (max-width: 40em)": {
+              display: "none",
+            },
+          }}
+          color={"flash"}
+          fontFamily={"primary"}
+        >
           <Flex>
             {library && (
               <Box

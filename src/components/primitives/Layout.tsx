@@ -16,7 +16,13 @@ const Layout = ({ title, children }: Props) => {
   } = Global.useContainer();
 
   return (
-    <>
+    <Box
+      sx={{
+        "@media screen and (max-width: 40em)": {
+          display: "none",
+        },
+      }}
+    >
       <Flex width={"80%"} margin={"auto"} justifyContent={"space-between"}>
         <Text fontFamily={"secondary"} mt={30} fontSize={3} fontWeight="body" color="fadedFlash">
           {title}
@@ -85,7 +91,7 @@ const Layout = ({ title, children }: Props) => {
       >
         {children && children}
       </Box>
-    </>
+    </Box>
   );
 };
 
