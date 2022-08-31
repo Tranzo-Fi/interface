@@ -17,6 +17,7 @@ const Header = (props: Props) => {
   const { chainId } = Connection.useContainer();
   const { library } = useWeb3React();
   const { switchNetwork } = useNetwork();
+  console.log(chainId);
   return (
     <>
       <Flex mx={30} justifyContent={"space-between"} py={15}>
@@ -71,7 +72,7 @@ const Header = (props: Props) => {
                 {chainId !== CHAIN_ID.Kovan ? "Switch to Polygon" : "Polygon Mainnet"}
               </Box>
             )}
-            {address ? <AccountStatus /> : <WalletConnectButton />}
+            {address ? chainId === 137 ? <AccountStatus /> : null : <WalletConnectButton />}
           </Flex>
         </Box>
       </Flex>

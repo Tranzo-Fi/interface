@@ -1,29 +1,30 @@
 import { User } from "container/user";
-import { providers } from "ethers";
+import { ethers, providers } from "ethers";
 
 const useNetwork = () => {
   const {
     actions: { logout },
   } = User.useContainer();
+  console.log(ethers.BigNumber.from(137).toHexString());
   const switchNetwork = async (provider: providers.Web3Provider, chainId: number) => {
     const hexChainId = "0x" + chainId.toString(16);
     console.log(provider);
     if (!provider || !provider.provider || !provider.provider.request) return;
     try {
       await provider.provider.request({
-        method: "wallet_switchEthereumChain",
+        method: "wallet_addEthereumChain",
         params: [{ chainId: hexChainId }],
       });
     } catch (error) {
       let params = {
-        chainId: "0x137",
+        chainId: ethers.BigNumber.from(137).toHexString(),
         chainName: "Polygon Mainnet",
         nativeCurrency: {
           name: "Polygon Matic",
           symbol: "MATIC",
           decimals: 18,
         },
-        rpcUrls: ["https://polygon-mainnet.infura.io/v3/ef6468f72f524d5ea0be6b57dd803d35"],
+        rpcUrls: [`https://polygon-rpc.com`],
         blockExplorerUrls: ["https://polygonscan.com"],
       };
 

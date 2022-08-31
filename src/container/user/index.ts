@@ -72,13 +72,12 @@ function useUser() {
           title: "Wrong Network",
           description: "Please use Polygon network", // todo: make this from a single source
         });
-        console.log("---connected---");
+        // console.log("---connected---");
         toggleWalletModal(false);
         setConenctTo("");
-        // logout();
       }
     }
-  }, [account, active, chainId, notify, setConenctTo, toggleWalletModal]);
+  }, [account, active, chainId, deactivate, notify, setConenctTo, toggleWalletModal]);
 
   const login = React.useCallback(
     (instance: AbstractConnector, connectorId: string, onActivate?: Function) => {
