@@ -1,6 +1,7 @@
 import { BrowserRouter, Switch } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { ToastContainer, toast } from "react-toastify";
+import ReactGA from "react-ga";
 import "react-toastify/dist/ReactToastify.css";
 
 import Routes from "./components/utils/Routes";
@@ -10,6 +11,7 @@ import { theme } from "./utils/theme";
 import WalletConnectModal from "components/wallet/WalletConnectModal";
 import CompletedModal from "components/CompletedModal";
 
+ReactGA.initialize("G-NMR8GBQ9KW");
 function App() {
   return (
     <>
