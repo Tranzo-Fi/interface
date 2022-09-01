@@ -11,7 +11,7 @@ import { theme } from "./utils/theme";
 import WalletConnectModal from "components/wallet/WalletConnectModal";
 import CompletedModal from "components/CompletedModal";
 
-ReactGA.initialize("G-NMR8GBQ9KW");
+ReactGA.initialize("UA-239737204-1");
 ReactGA.pageview(window.location.pathname + window.location.search);
 function App() {
   return (
