@@ -12,6 +12,7 @@ import WalletConnectModal from "components/wallet/WalletConnectModal";
 import CompletedModal from "components/CompletedModal";
 
 ReactGA.initialize("G-NMR8GBQ9KW");
+ReactGA.pageview(window.location.pathname + window.location.search);
 function App() {
   return (
     <>
